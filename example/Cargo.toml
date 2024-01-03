@@ -1,0 +1,9 @@
+[package]
+name = "tiktoklive_examples"
+version = "0.0.0"
+edition = "2021"
+
+
+[dependencies]
+tiktoklive_api = { path = "../api"}
+tiktoklive_client = { path = "../client"}
