@@ -27,7 +27,8 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         cargo install cargo-bump
-        VERSION=$(cargo bump patch)  # You can also use 'minor' or 'major'
-        git commit -am "Bump version to $VERSION"
+        VERSION=$(cargo bump patch)  
+        git commit -am "Bump version to ${{VERSION}}"
         git tag $VERSION
         git push && git push --tags
+        git branch $VERSION
