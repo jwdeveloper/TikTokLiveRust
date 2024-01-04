@@ -1,6 +1,6 @@
 <div align="center" >
 <a target="blank" >
-<img src="https://raw.githubusercontent.com/jwdeveloper/TikTokLiveJava/develop-1_0_0/Tools-ReadmeGenerator/src/main/resources/logo.svg" width="15%" >
+<img src="https://github.com/jwdeveloper/TikTokLiveRust/assets/79764581/5ae5385c-d31a-40d9-aa5c-9c8b06aae161" width="15%" >
 </a>
 </div>
 <div align="center" >
