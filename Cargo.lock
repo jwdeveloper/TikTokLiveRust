@@ -1152,7 +1152,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tiktoklive_client"
+name = "tiktoklive"
 version = "0.0.0"
 dependencies = [
  "bytes",
@@ -1170,15 +1170,6 @@ dependencies = [
  "tungstenite",
  "url",
  "urlencoding",
-]
-
-[[package]]
-name = "tiktoklive_examples"
-version = "0.0.0"
-dependencies = [
- "log",
- "tiktoklive_client",
- "tokio",
 ]
 
 [[package]]

@@ -4,7 +4,7 @@ pub mod live_events;
 use std::any::Any;
 use std::collections::HashMap;
 use std::time::Duration;
-use crate::common::live_common::{HttpData, TikTokLiveSettings};
+use crate::data::live_common::{HttpData, TikTokLiveSettings};
 
 
 pub fn create_default_settings(host_name: &str) -> TikTokLiveSettings
@@ -55,8 +55,8 @@ fn create_default_params()  -> HashMap<String,String>
     params.push(("screen_height", "1152"));
     params.push(("screen_width", "2048"));
     params.push(("tz_name", "Europe/Berlin"));
-    params.push(("referer", "https, //www.tiktok.com/"));
-    params.push(("root_referer", "https, //www.tiktok.com/"));
+    params.push(("referer", "https, //www.core.com/"));
+    params.push(("root_referer", "https, //www.core.com/"));
     params.push(("msToken", ""));
     params.push(("version_code", "180800"));
     params.push(("webcast_sdk_version", "1.3.0"));
@@ -71,7 +71,7 @@ fn create_default_headers()  -> HashMap<String,String>
 {
     let mut headers: Vec<(&str, &str)> = Vec::new();
 
-    headers.push(("authority", "www.tiktok.com"));
+    headers.push(("authority", "www.core.com"));
 
     headers.push(("Cache-Control", "max-age=0"));
     headers.push(("Accept", "text/html,application/json,application/protobuf"));

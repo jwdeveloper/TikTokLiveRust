@@ -1,10 +1,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::common::live_events::{TikTokGiftEvent, TikTokLiveEvent, TikTokWebsocketMessageEvent, TikTokWebsocketResponseEvent};
+use crate::data::live_events::{TikTokGiftEvent, TikTokLiveEvent, TikTokWebsocketMessageEvent, TikTokWebsocketResponseEvent};
 use crate::proto::messages::webcast::webcast_response::Message;
 use crate::proto::messages::webcast::WebcastResponse;
-use crate::tiktok::live_client::TikTokLiveClient;
-use crate::tiktok::live_client_events::TikTokLiveEventObserver;
+use crate::core::live_client::TikTokLiveClient;
+use crate::core::live_client_events::TikTokLiveEventObserver;
 
 pub struct TikTokLiveMessageMapper
 {

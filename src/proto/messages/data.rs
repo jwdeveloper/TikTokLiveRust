@@ -31176,7 +31176,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x10JoinGroupContent\x129\n\tgroupUser\x18\x01\x20\x01(\x0b2\x1b.TikTok.\
     GroupChannelAllUserR\tgroupUser\x12/\n\x08joinUser\x18\x02\x20\x01(\x0b2\
     \x13.TikTok.GroupPlayerR\x08joinUser\x12$\n\x04type\x18\x03\x20\x01(\x0e\
-    2\x10.TikTok.TextTypeR\x04typeB.\n*io.github.jwdeveloper.tiktok.messages\
+    2\x10.TikTok.TextTypeR\x04typeB.\n*io.github.jwdeveloper.core.messages\
     .dataP\x01b\x06proto3\
 ";
 

@@ -2,7 +2,7 @@ use std::str::Utf8Error;
 use std::time::Duration;
 use protobuf::Message;
 use reqwest::header::HeaderValue;
-use crate::common::live_common::TikTokLiveSettings;
+use crate::data::live_common::TikTokLiveSettings;
 use crate::http::http_data::{LiveDataRequest, LiveDataResponse, LiveStatus, LiveConnectionDataRequest, LiveUserDataResponse, UserStatus, LiveUserDataRequest, LiveConnectionDataResponse};
 use crate::http::http_data_mappers::{map_live_data_response, map_live_user_data_response, map_sign_server_response};
 use crate::http::http_request_builder::HttpRequestFactory;

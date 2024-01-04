@@ -3,7 +3,7 @@ use std::time::Duration;
 use bytes::Bytes;
 use reqwest::{Client, RequestBuilder};
 use urlencoding::encode;
-use crate::common::live_common::{HttpData, TikTokLiveSettings};
+use crate::data::live_common::{HttpData, TikTokLiveSettings};
 
 pub struct HttpRequestFactory
 {

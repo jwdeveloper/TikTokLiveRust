@@ -3,8 +3,8 @@ use tokio_tungstenite::tungstenite::handshake::client::{Request};
 use tokio_tungstenite::tungstenite::{connect};
 use crate::http::http_data::LiveConnectionDataResponse;
 use crate::proto::messages::webcast::{WebcastPushFrame, WebcastResponse};
-use crate::tiktok::live_client::TikTokLiveClient;
-use crate::tiktok::live_client_mapper::TikTokLiveMessageMapper;
+use crate::core::live_client::TikTokLiveClient;
+use crate::core::live_client_mapper::TikTokLiveMessageMapper;
 
 pub struct TikTokLiveWebsocketClient
 {

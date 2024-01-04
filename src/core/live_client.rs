@@ -1,14 +1,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use log::{debug, error, info, warn};
-use crate::common::live_common::ConnectionState::{CONNECTED, CONNECTING, DISCONNECTED};
-use crate::common::live_common::{ConnectionState, TikTokLiveInfo, TikTokLiveSettings};
-use crate::common::live_events::{TikTokLiveEvent};
+use crate::data::live_common::ConnectionState::{CONNECTED, CONNECTING, DISCONNECTED};
+use crate::data::live_common::{ConnectionState, TikTokLiveInfo, TikTokLiveSettings};
+use crate::data::live_events::{TikTokLiveEvent};
 use crate::http::http_data::{LiveDataRequest, LiveConnectionDataRequest, LiveUserDataRequest};
 use crate::http::http_data::LiveStatus::{HostOnline};
-use crate::tiktok::live_client_events::TikTokLiveEventObserver;
-use crate::tiktok::live_client_http::TikTokLiveHttpClient;
-use crate::tiktok::live_client_websocket::TikTokLiveWebsocketClient;
+use crate::core::live_client_events::TikTokLiveEventObserver;
+use crate::core::live_client_http::TikTokLiveHttpClient;
+use crate::core::live_client_websocket::TikTokLiveWebsocketClient;
 
 pub struct TikTokLiveClient
 {

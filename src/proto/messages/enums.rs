@@ -2650,7 +2650,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     ESSAGETYPE_SUBGIFTLOWVERSIONUPGRADENOTICE\x10\x0b\x12(\n$MESSAGETYPE_SUB\
     GIFTUSERBUYAUTHNOTICE\x10\x0c*C\n\x05Scene\x12\x11\n\rSCENE_UNKNOWN\x10\
     \0\x12\x11\n\rSCENE_CO_HOST\x10\x02\x12\x14\n\x10SCENE_MULTI_LIVE\x10\
-    \x04B/\n+io.github.jwdeveloper.tiktok.messages.enumsP\x01b\x06proto3\
+    \x04B/\n+io.github.jwdeveloper.core.messages.enumsP\x01b\x06proto3\
 ";
 
 /// `FileDescriptorProto` object which was a source for this generated file
