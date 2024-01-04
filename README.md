@@ -24,11 +24,6 @@
 # Introduction
 A Rust library. Use it to receive live stream events such as comments and gifts in realtime from [TikTok LIVE](https://www.tiktok.com/live) No credentials are required.
 
-
-<div align="center">
-  <a href="https://www.youtube.com/watch?v=eerWGgUKc6c" align="right" target="blank"><img src="https://img.youtube.com/vi/eerWGgUKc6c/hqdefault.jpg" alt="IMAGE ALT TEXT" width="38%" align="right"></a>
-</div>
-
 Join the support [discord](https://discord.gg/e2XwPNTBBr) and visit the `#rust-support` channel for questions, contributions and ideas. Feel free to make pull requests with missing/new features, fixes, etc
 
 Do you prefer other programming languages?
@@ -38,6 +33,7 @@ Do you prefer other programming languages?
 - **C#**     [TikTokLiveSharp](https://github.com/frankvHoof93/TikTokLiveSharp) by [@frankvHoof93](https://github.com/frankvHoof93)
 
 **NOTE:** This is not an official API. It's a reverse engineering project.
+
 
 #### Overview
 - [Getting started](#getting-started)
