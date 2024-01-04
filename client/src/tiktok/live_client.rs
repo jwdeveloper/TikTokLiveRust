@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use log::{debug, error, info, warn};
 use crate::common::live_common::ConnectionState::{CONNECTED, CONNECTING, DISCONNECTED};
 use crate::common::live_common::{ConnectionState, TikTokLiveInfo, TikTokLiveSettings};
@@ -10,29 +11,17 @@ use crate::tiktok::live_client_websocket::TikTokLiveWebsocketClient;
 
 pub struct TikTokLiveClient
 {
-    settings: TikTokLiveSettings,
-    http_client: TikTokLiveHttpClient,
-    event_observer: TikTokLiveEventObserver,
-    websocket_client: TikTokLiveWebsocketClient,
+    pub(crate) settings: TikTokLiveSettings,
+    pub(crate) http_client: TikTokLiveHttpClient,
+    pub(crate) event_observer:  TikTokLiveEventObserver,
+    pub(crate) websocket_client: TikTokLiveWebsocketClient,
     pub room_info: TikTokLiveInfo,
+
 }
 
 impl TikTokLiveClient
 {
-    pub fn new(event_observer: TikTokLiveEventObserver,
-               http_client: TikTokLiveHttpClient,
-               websocket_client: TikTokLiveWebsocketClient,
-               settings: TikTokLiveSettings) -> Self
-    {
-        TikTokLiveClient
-        {
-            settings,
-            http_client,
-            event_observer,
-            websocket_client,
-            room_info: TikTokLiveInfo::default(),
-        }
-    }
+
 
     pub async fn connect(&self)
     {

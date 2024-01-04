@@ -130,12 +130,4 @@ impl TikTokLiveHttpClient
         };
     }
 
-
-    fn parse_cookie_header(header: &HeaderValue) -> Result<(String, String), Utf8Error> {
-        let cookie_str = header.to_str().unwrap();
-        let mut parts = cookie_str.splitn(2, '=');
-        let key = parts.next().unwrap_or_default().to_string();
-        let value = parts.next().unwrap_or_default().to_string();
-        Ok((key, value))
-    }
 }
