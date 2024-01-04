@@ -47,7 +47,7 @@ Do you prefer other programming languages?
 #### Overview
 - [Getting started](#getting-started)
 - [Events](#events)
-- [Documentation](#docs.rs/tiktoklive/0.0.1)
+- [Documentation](https://docs.rs/tiktoklive/0.0.1/tiktoklive/)
 - [Contributing](#contributing)
 
 ## Getting started
