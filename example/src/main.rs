@@ -1,32 +1,37 @@
-use log::info;
 use tiktoklive_client;
-use tiktoklive_client::live_client::TikTokLiveClient;
-use tiktoklive_client::live_client_builder::TikTokLiveSettings;
-use tiktoklive_client::live_client_events::TikTokLiveEvent;
+use tiktoklive_client::common::live_common::TikTokLiveSettings;
+use tiktoklive_client::common::live_events::{TikTokLiveEvent};
+use tiktoklive_client::tiktok::live_client::TikTokLiveClient;
+use tiktoklive_client::tiktok::TikTokLive;
 
-use tiktoklive_client::tiktok_live::TikTokLive;
 
-fn main()
-{
-    let client = TikTokLive::new_client()
+#[tokio::main]
+async fn main() {
+    let client = TikTokLive::new_client("dash4214")
         .configure(configure)
         .configure(configure)
-        .on_message(onGift)
-        .on_message(onGift)
-        .on_message(onGift)
+        .on_message(onEvent)
+        .on_message(onEvent)
+        .on_message(onEvent)
         .build();
 
-    client.connect();
+
+    client.connect().await;
 }
+
 
 fn configure(settings: &mut TikTokLiveSettings)
 {
-
     settings.language = "dupa".to_string();
-    println!("config! {}",settings.language);
 }
 
-fn onGift(client: &TikTokLiveClient, event: &TikTokLiveEvent)
+fn onEvent(client: &TikTokLiveClient, event: &TikTokLiveEvent)
 {
-    println!("siema!")
+    match event
+    {
+        TikTokLiveEvent::TikTokGift(gift) =>
+            {}
+        TikTokLiveEvent::TikTokChest(chest) =>
+            {}
+    }
 }

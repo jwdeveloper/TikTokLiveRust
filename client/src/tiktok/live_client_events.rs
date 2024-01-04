@@ -1,20 +1,14 @@
 use std::cell::RefCell;
-use crate::live_client::TikTokLiveClient;
+use crate::common::live_events::TikTokLiveEvent;
+use crate::tiktok::live_client::TikTokLiveClient;
 
-
-
-pub struct TikTokLiveEvent
-{
-    pub created_at: i32,
-    pub name: String,
-}
 
 pub type TikTokEventHandler = fn(client: &TikTokLiveClient, event: &TikTokLiveEvent);
 
 #[derive(Clone)]
 pub struct TikTokLiveEventObserver
 {
-    pub(crate) events : Vec<TikTokEventHandler>
+    pub events: Vec<TikTokEventHandler>,
 }
 
 impl TikTokLiveEventObserver
@@ -23,7 +17,7 @@ impl TikTokLiveEventObserver
     {
         TikTokLiveEventObserver
         {
-          events: vec![]
+            events: vec![]
         }
     }
 
@@ -32,12 +26,11 @@ impl TikTokLiveEventObserver
         self.events.push(handler);
     }
 
-    pub fn publish(&self, client: &TikTokLiveClient, event: &TikTokLiveEvent)
+    pub fn publish(&self, client: &TikTokLiveClient, event:  &TikTokLiveEvent)
     {
         for handler in &self.events
         {
-            handler(client,event);
+            handler(client, event);
         }
     }
-
 }

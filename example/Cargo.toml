@@ -5,6 +5,6 @@ edition = "2021"
 
 
 [dependencies]
-tiktoklive_api = { path = "../api"}
 tiktoklive_client = { path = "../client"}
+tokio = { version = "1", features = ["full"] }
 log = "0.4.20"
