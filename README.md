@@ -9,18 +9,12 @@
 ❤️❤️🎁 *Connect to TikTok live in 3 lines* 🎁❤️❤️
 
 <div align="center" >
-<a href="https://jitpack.io/#jwdeveloper/TikTok-Live-Java" target="blank" >
-<img src="https://jitpack.io/v/jwdeveloper/TikTok-Live-Java.svg" width="20%" >
-</a>
-
 
 <a href="https://discord.gg/e2XwPNTBBr" target="blank" >
-<img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white" >
+<img src="https://img.shields.io/discord/977648006063091742.svg?color=7289da&logo=discord&style=flat-square" >
 </a>
 
-<a target="blank" >
-<img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white" >
-</a>
+
 </div>
 </div>
 
