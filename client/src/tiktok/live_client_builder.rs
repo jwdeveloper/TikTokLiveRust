@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::rc::Rc;
 use env_logger::{Builder, Env};
 use log::LevelFilter;
 use crate::common::create_default_settings;
@@ -49,10 +50,11 @@ impl TikTokLiveBuilder
 
     pub fn build(&self) -> TikTokLiveClient {
         let settings = &self.settings;
-        let observer: &TikTokLiveEventObserver = &self.event_observer;
+        let observer  = &self.event_observer;
+        let observerReference =  Rc::new(observer.clone());
         let mapper = TikTokLiveMessageMapper
         {
-            event_observer: observer
+            event_observer: observerReference.clone()
         };
         let websocket_client = TikTokLiveWebsocketClient
         {
@@ -71,16 +73,11 @@ impl TikTokLiveBuilder
         {
             settings: settings.clone(),
             http_client,
-            event_observer,
+            event_observer: observerReference.clone(),
             websocket_client,
             room_info: TikTokLiveInfo::default(),
         };
     }
 
-    pub fn build_and_connect(&self) -> TikTokLiveClient
-    {
-        let client = self.build();
-        client.connect();
-        return client;
-    }
+
 }

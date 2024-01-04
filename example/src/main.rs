@@ -10,10 +10,7 @@ use tiktoklive_client::tiktok::TikTokLive;
 async fn main() {
     let client = TikTokLive::new_client("dash4214")
         .configure(configure)
-        .configure(configure)
-        .on_message(onEvent)
-        .on_message(onEvent)
-        .on_message(onEvent)
+        .on_message(on_event)
         .build();
 
 
@@ -27,16 +24,15 @@ fn configure(settings: &mut TikTokLiveSettings)
 
 }
 
-fn onEvent(client: &TikTokLiveClient, event: &TikTokLiveEvent)
+fn on_event(client: &TikTokLiveClient, event: &TikTokLiveEvent)
 {
+
     match event
     {
-        TikTokLiveEvent::onGift(gift) =>
+            TikTokLiveEvent::OnWebsocketMessageEvent(event)=>
             {
-                let i = 0;
-                let x = gift.gift_id;
+                println!("siema! {}",event.websocket_message.method)
             }
-        TikTokLiveEvent::onChest(chest) =>
-            {}
-    };
+        _ => {}
+    }
 }

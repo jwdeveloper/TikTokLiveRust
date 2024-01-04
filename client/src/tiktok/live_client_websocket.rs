@@ -47,7 +47,6 @@ impl TikTokLiveWebsocketClient
                 let binary = push_frame_ack.write_to_bytes().unwrap();
                 let message = tungstenite::protocol::Message::binary(binary);
                 socket.write_message(message).expect("Unable to send ack packet");
-                println!("send ack packet!")
             }
 
             self.message_mapper.handle_webcast_response(&webcast_response, &client);

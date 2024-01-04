@@ -26,11 +26,11 @@ impl TikTokLiveEventObserver
         self.events.push(handler);
     }
 
-    pub fn publish(&self, client: &TikTokLiveClient, event:  &TikTokLiveEvent)
+    pub fn publish(&self, client: &TikTokLiveClient, event: TikTokLiveEvent)
     {
         for handler in &self.events
         {
-            handler(client, event);
+            handler(client, &event);
         }
     }
 }
