@@ -10,10 +10,13 @@
 
 <div align="center" >
 
+<a href="https://crates.io/crates/tiktoklive" target="blank" >
+<img src="https://img.shields.io/crates/v/tiktoklive.svg" >
+</a>
+
 <a href="https://discord.gg/e2XwPNTBBr" target="blank" >
 <img src="https://img.shields.io/discord/977648006063091742.svg?color=7289da&logo=discord&style=flat-square" >
 </a>
-
 
 </div>
 </div>
