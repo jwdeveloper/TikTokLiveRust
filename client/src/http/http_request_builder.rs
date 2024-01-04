@@ -51,7 +51,7 @@ impl HttpRequestBuilder
 
     pub fn withParam(&mut self, name: &str, value: &str) -> &mut Self
     {
-        self.http_data.params.push((name.to_string(), value.to_string()));
+        self.http_data.params.insert(name.to_string(), value.to_string());
         self
     }
 
@@ -68,14 +68,14 @@ impl HttpRequestBuilder
 
     pub fn withHeader(&mut self, name: &str, value: &str) -> &mut Self
     {
-        self.http_data.headers.push((name.to_string(), value.to_string()));
+        self.http_data.headers.insert(name.to_string(), value.to_string());
         self
     }
 
 
     pub fn withCookie(&mut self, name: &str, value: &str) -> &mut Self
     {
-        self.http_data.cookies.push((name.to_string(), value.to_string()));
+        self.http_data.cookies.insert(name.to_string(), value.to_string());
         self
     }
 

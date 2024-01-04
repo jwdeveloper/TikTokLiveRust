@@ -1,3 +1,4 @@
+use std::time::Duration;
 use tiktoklive_client;
 use tiktoklive_client::common::live_common::TikTokLiveSettings;
 use tiktoklive_client::common::live_events::{TikTokLiveEvent};
@@ -22,16 +23,20 @@ async fn main() {
 
 fn configure(settings: &mut TikTokLiveSettings)
 {
-    settings.language = "dupa".to_string();
+    settings.http_data.time_out= Duration::from_secs(12)
+
 }
 
 fn onEvent(client: &TikTokLiveClient, event: &TikTokLiveEvent)
 {
     match event
     {
-        TikTokLiveEvent::TikTokGift(gift) =>
+        TikTokLiveEvent::onGift(gift) =>
+            {
+                let i = 0;
+                let x = gift.gift_id;
+            }
+        TikTokLiveEvent::onChest(chest) =>
             {}
-        TikTokLiveEvent::TikTokChest(chest) =>
-            {}
-    }
+    };
 }

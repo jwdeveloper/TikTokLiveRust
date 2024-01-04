@@ -95,34 +95,38 @@ impl TikTokLiveHttpClient
             .unwrap();
 
 
-        let headers = response.headers().clone();
+        let optionalHeader = response.headers().get("set-cookie");
+
+        if (optionalHeader.is_none())
+        {
+            panic!("Header was not received not provided")
+        }
+        let headerValue = optionalHeader.unwrap().to_str().unwrap().to_string();
+
 
         let protocol_buffer_message = response.bytes().await.unwrap();
         let webcast_response = WebcastResponse::parse_from_bytes(protocol_buffer_message.as_ref())
             .expect("Unable to parse bytes to Push Frame!");
 
 
-        let mut web_socket_headers: Vec<HeaderValue> = vec![];
-        for cookie in headers.get_all("set-cookie").iter()
-        {
-            web_socket_headers.push(cookie.clone());
-        }
-
-
         //preparing websocket url
         let web_socket_url = self.factory
             .request()
             .withUrl(webcast_response.pushServer.as_str())
+            .withParam("room_id", request.room_id.as_str())
             .withParam("cursor", webcast_response.cursor.as_str())
-            .withParam("internal_ext", webcast_response.cursor.as_str())
+            .withParam("resp_content_type", "protobuf")
+            .withParam("internal_ext", webcast_response.internalExt.as_str())
             .withParams(&webcast_response.routeParamsMap)
             .asUrl();
+
+        let url = url::Url::parse(web_socket_url.as_str()).unwrap();
 
         return LiveConnectionDataResponse
         {
             web_socket_timeout: self.settings.http_data.time_out,
-            web_socket_headers: web_socket_headers,
-            web_socket_url,
+            web_socket_cookies: headerValue,
+            web_socket_url: url,
         };
     }
 

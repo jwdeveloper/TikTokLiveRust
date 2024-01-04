@@ -1,9 +1,13 @@
 use log::info;
 use protobuf::Message;
+use protobuf::well_known_types::struct_::Value;
 use reqwest::header::{HeaderMap, HeaderValue};
 use reqwest::Url;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::time::timeout;
 use tokio_tungstenite::connect_async;
+use tokio_tungstenite::tungstenite::handshake::client::{Request};
+use tokio_tungstenite::tungstenite::http;
 use crate::http::http_data::LiveConnectionDataResponse;
 use crate::tiktok::live_client::TikTokLiveClient;
 
@@ -14,24 +18,22 @@ impl TikTokLiveWebsocketClient
 {
     pub async fn start(&self, response: LiveConnectionDataResponse, client: &TikTokLiveClient)
     {
-        let url = Url::parse(response.web_socket_url.as_str()).expect("Invalid URL");
+        let host = response.web_socket_url.host_str().expect("Invalid host in WebSocket URL");
 
-        let mut headers = HeaderMap::new();
-        for header in response.web_socket_headers
-        {
-            headers.insert("Cookie", header);
-        }
-        let (mut socket, _) = timeout(response.web_socket_timeout, connect_async(url))
-            .await
-            .unwrap().unwrap();
+        let request = Request::builder()
+            .method("GET")
+            .uri(response.web_socket_url.to_string())
+            .header("Host", host)
+            .header("Upgrade", "websocket")
+            .header("Connection", "upgrade")
+            .header("Sec-Websocket-Key", "asd")
+            .header("Cookie", response.web_socket_cookies)
+            .header("Sec-Websocket-Version", "13")
+            .body(())
+            .unwrap();
 
-
-        println!("WebSocket connected");
-
-/*
-        socket.send(Message::Text("Hello WebSocket".into())).await?;
-
-        // Listen for messages from the server
+        let (mut socket, _) = connect_async(request).await.expect("Failed to connect");
+        socket.send(Message::Text("Hello, world!".into())).await?;
         while let Some(msg) = socket.next().await {
             let msg = msg?;
 
@@ -40,11 +42,8 @@ impl TikTokLiveWebsocketClient
                 Message::Binary(bin) => println!("Received binary data: {:?}", bin),
                 _ => (),
             }
-        }*/
-
-
+        }
     }
-
 
     pub fn stop(&self)
     {}

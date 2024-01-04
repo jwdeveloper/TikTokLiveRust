@@ -2,6 +2,7 @@ pub mod live_common;
 pub mod live_events;
 
 use std::any::Any;
+use std::collections::HashMap;
 use std::time::Duration;
 use crate::common::live_common::{HttpData, TikTokLiveSettings};
 
@@ -25,7 +26,7 @@ pub fn create_default_settings(host_name: &str) -> TikTokLiveSettings
 }
 
 
-fn create_default_params() -> Vec<(String, String)>
+fn create_default_params()  -> HashMap<String,String>
 {
     let mut params: Vec<(&str, &str)> = Vec::new();
     params.push(("aid", "1988"));
@@ -66,7 +67,7 @@ fn create_default_params() -> Vec<(String, String)>
         .collect();
 }
 
-fn create_default_headers() -> Vec<(String, String)>
+fn create_default_headers()  -> HashMap<String,String>
 {
     let mut headers: Vec<(&str, &str)> = Vec::new();
 
@@ -86,7 +87,7 @@ fn create_default_headers() -> Vec<(String, String)>
 }
 
 
-fn create_default_cookies() -> Vec<(String, String)>
+fn create_default_cookies() -> HashMap<String,String>
 {
-    return Vec::new();
+    return HashMap::new();
 }

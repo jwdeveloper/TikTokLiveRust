@@ -14,7 +14,7 @@ pub struct TikTokChestEvent
 
 pub enum TikTokLiveEvent
 {
-    TikTokGift(TikTokGiftEvent),
-    TikTokChest(TikTokChestEvent),
+    onGift(TikTokGiftEvent),
+    onChest(TikTokChestEvent),
 }
 

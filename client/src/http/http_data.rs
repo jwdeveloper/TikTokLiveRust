@@ -2,6 +2,7 @@ use std::time::Duration;
 use bytes::Bytes;
 use reqwest::header::HeaderValue;
 use tokio_tungstenite::tungstenite::http::header::GetAll;
+use url::Url;
 
 pub struct LiveUserDataRequest
 {
@@ -40,8 +41,8 @@ pub struct LiveConnectionDataRequest
 pub struct LiveConnectionDataResponse
 {
     pub web_socket_timeout: Duration,
-    pub web_socket_headers: Vec<HeaderValue>,
-    pub web_socket_url: String,
+    pub web_socket_cookies: String,
+    pub web_socket_url: Url,
 }
 
 

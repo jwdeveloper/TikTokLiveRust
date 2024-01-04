@@ -1,4 +1,5 @@
 use std::cell::Cell;
+use std::collections::HashMap;
 use std::time::Duration;
 
 
@@ -18,9 +19,9 @@ pub struct TikTokLiveSettings
 pub struct HttpData
 {
     pub time_out: Duration,
-    pub params: Vec<(String, String)>,
-    pub headers: Vec<(String, String)>,
-    pub cookies: Vec<(String, String)>,
+    pub params: HashMap<String, String>,
+    pub headers: HashMap<String, String>,
+    pub cookies: HashMap<String, String>,
 }
 
 #[derive(Default)]
