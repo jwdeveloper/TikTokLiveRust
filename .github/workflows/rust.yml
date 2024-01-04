@@ -3,8 +3,6 @@ name: Publish New Version
 on:
   workflow_dispatch:
 
-
-
 env:
   CARGO_TERM_COLOR: always
 
@@ -32,3 +30,9 @@ jobs:
         git tag $VERSION
         git push && git push --tags
         git branch $VERSION
+
+    - name: Publish to crates.io
+      uses: actions-rs/cargo@v1
+      with:
+        command: publish
+        args: --token ${{ secrets.CRATES_IO_TOKEN }}
