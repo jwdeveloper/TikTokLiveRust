@@ -1,6 +1,19 @@
 use crate::proto::messages::webcast::webcast_response::Message;
 use crate::proto::messages::webcast::WebcastResponse;
 
+
+#[macro_export]
+macro_rules! tik_tok_event
+{
+    () => {
+        println!("DUP!")
+    };
+}
+
+
+
+tik_tok_event!();
+
 pub struct TikTokGiftEvent
 {
     pub gift_id: i32,

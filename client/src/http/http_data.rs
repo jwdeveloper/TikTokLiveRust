@@ -1,7 +1,4 @@
 use std::time::Duration;
-use bytes::Bytes;
-use reqwest::header::HeaderValue;
-use tokio_tungstenite::tungstenite::http::header::GetAll;
 use url::Url;
 
 pub struct LiveUserDataRequest

@@ -1,8 +1,14 @@
 [package]
 name = "tiktoklive_client"
 version = "0.0.0"
+description = " "
+homepage = "https://github.com/jwdeveloper/TikTokLiveRust"
+repository = "https://github.com/jwdeveloper/TikTokLiveRust"
+keywords = ["api", "stream", "tiktok", "live", "tiktok-live", ]
+license = "MIT"
 edition = "2021"
 authors = ["JW"]
+readme = "README.md"
 build = "src/build.rs"
 
 
