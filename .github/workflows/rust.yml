@@ -23,7 +23,6 @@ jobs:
         override: true
 
     - name: Bump version and create tag
-      if: github.ref == 'refs/heads/main'
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
