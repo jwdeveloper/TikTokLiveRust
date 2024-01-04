@@ -1,0 +1,34 @@
+name: Publish New Version
+
+on:
+  workflow_dispatch:
+
+
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Ensures history is available for tags
+
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Bump version and create tag
+      if: github.ref == 'refs/heads/main'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        cargo install cargo-bump
+        VERSION=$(cargo bump patch)  # You can also use 'minor' or 'major'
+        git commit -am "Bump version to $VERSION"
+        git tag $VERSION
+        git push && git push --tags
