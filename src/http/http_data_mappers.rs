@@ -1,5 +1,6 @@
 use serde_json::Value;
-use crate::http::http_data::{LiveDataResponse, LiveStatus, LiveUserDataResponse, SignServerResponse, UserStatus};
+
+use crate::http::http_data::{LiveDataResponse, LiveUserDataResponse, SignServerResponse};
 use crate::http::http_data::LiveStatus::{HostNotFound, HostOffline, HostOnline};
 use crate::http::http_data::UserStatus::{Live, LivePaused, NotFound, Offline};
 
@@ -9,40 +10,40 @@ pub fn map_live_user_data_response(json: String) -> LiveUserDataResponse
 
 
     let message = json_value["message"].as_str().unwrap();
-    if (message.eq("params_error"))
+    if  message.eq("params_error")
     {
         panic!("fetchRoomIdFromTiktokApi -> Unable to fetch roomID, contact the developer");
     }
-    if (message.eq("user_not_found")) {
+    if message.eq("user_not_found") {
         panic!("TikTokUserInfo.UserStatus.NotFound");
     }
 
     let option_data = json_value["data"].as_object();
-    if (option_data.is_none())
+    if option_data.is_none()
     {
         panic!("TikTokUserInfo.UserStatus.NotFound");
     }
     let option = option_data.unwrap();
     let user = option["user"].as_object().unwrap();
-    let roomId = user["roomId"].as_str().unwrap();
+    let room_id = user["roomId"].as_str().unwrap();
     let status = user["status"].as_i64().unwrap();
 
-    let userStatus = match status {
+    let user_status = match status {
         2 => Live,
         3 => LivePaused,
         4 => Offline,
         _ => NotFound,
     };
 
-    let liveRoom = option["liveRoom"].as_object().unwrap();
-    let startTime = liveRoom["startTime"].as_i64().unwrap();
+    let live_room = option["liveRoom"].as_object().unwrap();
+    let start_time = live_room["startTime"].as_i64().unwrap();
 
     return LiveUserDataResponse
     {
-        user_status: userStatus,
+        user_status,
         json: json.to_string(),
-        room_id: roomId.to_string(),
-        started_at_timestamp: startTime,
+        room_id: room_id.to_string(),
+        started_at_timestamp: start_time,
     };
 }
 

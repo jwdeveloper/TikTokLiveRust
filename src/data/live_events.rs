@@ -1,20 +1,23 @@
 use crate::proto::messages::webcast::webcast_response::Message;
-use crate::proto::messages::webcast::WebcastResponse;
+use crate::proto::messages::webcast::{WebcastChatMessage, WebcastGiftMessage, WebcastMemberMessage, WebcastResponse};
 
 
+pub struct TikTokJoinEvent
+{
+    pub raw_data: WebcastMemberMessage,
+}
 
+pub struct TikTokChatEvent
+{
+    pub raw_data: WebcastChatMessage,
+}
 
 pub struct TikTokGiftEvent
 {
-    pub gift_id: i32,
-    pub gift_name: String,
+    pub raw_data: WebcastGiftMessage
+
 }
 
-pub struct TikTokChestEvent
-{
-    pub gift_id: i32,
-    pub gift_name: String,
-}
 
 pub struct TikTokWebsocketResponseEvent
 {
@@ -26,11 +29,18 @@ pub struct TikTokWebsocketMessageEvent
     pub websocket_message: Message,
 }
 
+pub struct TikTokWebsocketUnknownMessageEvent
+{
+    pub websocket_message: Message,
+}
+
 pub enum TikTokLiveEvent
 {
+    onJoin(TikTokJoinEvent),
     OnGift(TikTokGiftEvent),
-    OnChest(TikTokChestEvent),
+    onChat(WebcastChatMessage),
     OnWebsocketResponseEvent(TikTokWebsocketResponseEvent),
     OnWebsocketMessageEvent(TikTokWebsocketMessageEvent),
+    onWebsocketUnknownMessageEvent(TikTokWebsocketUnknownMessageEvent)
 }
 

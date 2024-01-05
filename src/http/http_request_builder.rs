@@ -1,8 +1,10 @@
 use std::collections::HashMap;
 use std::time::Duration;
+
 use bytes::Bytes;
 use reqwest::{Client, RequestBuilder};
 use urlencoding::encode;
+
 use crate::data::live_common::{HttpData, TikTokLiveSettings};
 
 pub struct HttpRequestFactory
@@ -31,49 +33,49 @@ pub struct HttpRequestBuilder
 
 impl HttpRequestBuilder
 {
-    pub fn withReset(&mut self) -> &mut Self
+    pub fn with_reset(&mut self) -> &mut Self
     {
         self.http_data = HttpData::default();
         self
     }
 
 
-    pub fn withTimeOut(&mut self, timeOut: Duration) -> &mut Self
+    pub fn with_time_out(&mut self, time_out: Duration) -> &mut Self
     {
-        self.http_data.time_out = timeOut;
+        self.http_data.time_out = time_out;
         self
     }
-    pub fn withUrl(&mut self, url: &str) -> &mut Self
+    pub fn with_url(&mut self, url: &str) -> &mut Self
     {
         self.url = url.to_string();
         self
     }
 
-    pub fn withParam(&mut self, name: &str, value: &str) -> &mut Self
+    pub fn with_param(&mut self, name: &str, value: &str) -> &mut Self
     {
         self.http_data.params.insert(name.to_string(), value.to_string());
         self
     }
 
-    pub fn withParams(&mut self, params: &HashMap<String, String>) -> &mut Self
+    pub fn with_params(&mut self, params: &HashMap<String, String>) -> &mut Self
     {
         for entry in params
         {
-            self.withParam(entry.0, entry.1);
+            self.with_param(entry.0, entry.1);
         }
 
         self
     }
 
 
-    pub fn withHeader(&mut self, name: &str, value: &str) -> &mut Self
+    pub fn with_header(&mut self, name: &str, value: &str) -> &mut Self
     {
         self.http_data.headers.insert(name.to_string(), value.to_string());
         self
     }
 
 
-    pub fn withCookie(&mut self, name: &str, value: &str) -> &mut Self
+    pub fn with_cookie(&mut self, name: &str, value: &str) -> &mut Self
     {
         self.http_data.cookies.insert(name.to_string(), value.to_string());
         self
@@ -91,7 +93,7 @@ impl HttpRequestBuilder
     pub fn build_get_request(&mut self) -> RequestBuilder
     {
         let client = self.build_client();
-        let url = self.asUrl();
+        let url = self.as_url();
         let mut res = client.get(url);
         for header in self.http_data.headers.clone()
         {
@@ -100,7 +102,7 @@ impl HttpRequestBuilder
         return res;
     }
 
-    pub async fn asJson(&mut self) -> Option<String>
+    pub async fn as_json(&mut self) -> Option<String>
     {
         let result = self.build_get_request().send()
             .await.unwrap();
@@ -114,7 +116,7 @@ impl HttpRequestBuilder
         }
     }
 
-    pub async fn asBytes(&mut self) -> Option<Bytes>
+    pub async fn as_bytes(&mut self) -> Option<Bytes>
     {
         let result = self.build_get_request().send()
             .await.unwrap();
@@ -128,9 +130,9 @@ impl HttpRequestBuilder
         }
     }
 
-    pub fn asUrl(&mut self) -> String
+    pub fn as_url(&mut self) -> String
     {
-        if (self.http_data.params.len() == 0)
+        if self.http_data.params.len() == 0
         {
             return self.url.to_string();
         }

@@ -1,19 +1,27 @@
 use std::time::Duration;
 
-use tiktoklive::data::live_common::TikTokLiveSettings;
-use tiktoklive::data::live_events::{TikTokLiveEvent};
 use tiktoklive::core::live_client::TikTokLiveClient;
+use tiktoklive::data::live_common::TikTokLiveSettings;
+use tiktoklive::data::live_events::TikTokLiveEvent;
+
 use tiktoklive::TikTokLive;
 
 #[tokio::main]
 async fn main() {
+
+    let c = tiktoklive::proto::messages::data::file_descriptor();
+   // let b = tiktoklive::proto::messages::enums::file_descriptor();
+  //  let a = tiktoklive::proto::messages::webcast::file_descriptor();
+
+
+
+
     let user_name = "dash4214";
     let client = TikTokLive::new_client(user_name)
         .configure(configure)
         .on_event(on_event)
         .build();
 
-  ;
     client.connect().await;
 }
 

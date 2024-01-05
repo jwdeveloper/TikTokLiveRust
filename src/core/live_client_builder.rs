@@ -1,18 +1,16 @@
-use std::cell::RefCell;
 use std::rc::Rc;
+
 use env_logger::{Builder, Env};
 use log::LevelFilter;
-use crate::data::create_default_settings;
-use crate::data::live_common::{TikTokLiveInfo, TikTokLiveSettings};
-use crate::http::http_request_builder::HttpRequestFactory;
+
 use crate::core::live_client::TikTokLiveClient;
 use crate::core::live_client_events::{TikTokEventHandler, TikTokLiveEventObserver};
 use crate::core::live_client_http::TikTokLiveHttpClient;
 use crate::core::live_client_mapper::TikTokLiveMessageMapper;
 use crate::core::live_client_websocket::TikTokLiveWebsocketClient;
-
-
-
+use crate::data::create_default_settings;
+use crate::data::live_common::{TikTokLiveInfo, TikTokLiveSettings};
+use crate::http::http_request_builder::HttpRequestFactory;
 
 pub struct TikTokLiveBuilder
 {
@@ -91,11 +89,8 @@ impl TikTokLiveBuilder
     pub fn build(&self) -> TikTokLiveClient {
         let settings = &self.settings;
         let observer  = &self.event_observer;
-        let observerReference =  Rc::new(observer.clone());
-        let mapper = TikTokLiveMessageMapper
-        {
-            event_observer: observerReference.clone()
-        };
+        let observer_reference =  Rc::new(observer.clone());
+        let mapper = TikTokLiveMessageMapper::new();
         let websocket_client = TikTokLiveWebsocketClient
         {
             message_mapper: mapper
@@ -113,7 +108,7 @@ impl TikTokLiveBuilder
         {
             settings: settings.clone(),
             http_client,
-            event_observer: observerReference.clone(),
+            event_observer: observer_reference.clone(),
             websocket_client,
             room_info: TikTokLiveInfo::default(),
         };

@@ -7,8 +7,6 @@ package TikTok;
 import "data.proto";
 import "enums.proto";
 
-option java_package = "io.github.jwdeveloper.core.messages.webcast";
-option java_multiple_files = true;
 
 
 //@WebcastPushFrame

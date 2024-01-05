@@ -1,4 +1,4 @@
-
+use protobuf_codegen::Codegen;
 
 fn main()
 {
@@ -20,7 +20,7 @@ fn generate_proto()
 
 
 
-    /*protobuf_codegen::Codegen::new()
+   Codegen::new()
         .protoc()
         .protoc_path(&protoc_bin_vendored::protoc_bin_path().unwrap())
         .includes(&["src/proto"])
@@ -28,5 +28,5 @@ fn generate_proto()
         .input("src/proto/data.proto")
         .input("src/proto/enums.proto")
         .out_dir("src/proto/messages")
-        .run_from_script();*/
+        .run_from_script();
 }

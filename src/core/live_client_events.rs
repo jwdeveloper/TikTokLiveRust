@@ -1,7 +1,5 @@
-use std::cell::RefCell;
-use crate::data::live_events::TikTokLiveEvent;
 use crate::core::live_client::TikTokLiveClient;
-
+use crate::data::live_events::TikTokLiveEvent;
 
 pub type TikTokEventHandler = fn(client: &TikTokLiveClient, event: &TikTokLiveEvent);
 

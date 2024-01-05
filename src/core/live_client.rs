@@ -1,14 +1,15 @@
-use std::cell::RefCell;
 use std::rc::Rc;
-use log::{debug, error, info, warn};
-use crate::data::live_common::ConnectionState::{CONNECTED, CONNECTING, DISCONNECTED};
-use crate::data::live_common::{ConnectionState, TikTokLiveInfo, TikTokLiveSettings};
-use crate::data::live_events::{TikTokLiveEvent};
-use crate::http::http_data::{LiveDataRequest, LiveConnectionDataRequest, LiveUserDataRequest};
-use crate::http::http_data::LiveStatus::{HostOnline};
+
+use log::{error, info, warn};
+
 use crate::core::live_client_events::TikTokLiveEventObserver;
 use crate::core::live_client_http::TikTokLiveHttpClient;
 use crate::core::live_client_websocket::TikTokLiveWebsocketClient;
+use crate::data::live_common::{ConnectionState, TikTokLiveInfo, TikTokLiveSettings};
+use crate::data::live_common::ConnectionState::{CONNECTED, CONNECTING, DISCONNECTED};
+use crate::data::live_events::TikTokLiveEvent;
+use crate::http::http_data::{LiveConnectionDataRequest, LiveDataRequest, LiveUserDataRequest};
+use crate::http::http_data::LiveStatus::HostOnline;
 
 pub struct TikTokLiveClient
 {
@@ -45,7 +46,7 @@ impl TikTokLiveClient
         {
             room_id: room_id.clone()
         }).await;
-        if (response.live_status != HostOnline)
+        if response.live_status != HostOnline
         {
             error!("Live stream for host is not online!, current status {:?}",response.live_status);
             return;

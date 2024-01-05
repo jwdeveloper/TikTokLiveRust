@@ -2,7 +2,6 @@ use std::cell::Cell;
 use std::collections::HashMap;
 use std::time::Duration;
 
-
 #[derive(Clone)]
 pub struct TikTokLiveSettings
 {

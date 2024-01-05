@@ -1,9 +1,7 @@
-use std::str::Utf8Error;
-use std::time::Duration;
 use protobuf::Message;
-use reqwest::header::HeaderValue;
+
 use crate::data::live_common::TikTokLiveSettings;
-use crate::http::http_data::{LiveDataRequest, LiveDataResponse, LiveStatus, LiveConnectionDataRequest, LiveUserDataResponse, UserStatus, LiveUserDataRequest, LiveConnectionDataResponse};
+use crate::http::http_data::{LiveConnectionDataRequest, LiveConnectionDataResponse, LiveDataRequest, LiveDataResponse, LiveUserDataRequest, LiveUserDataResponse};
 use crate::http::http_data_mappers::{map_live_data_response, map_live_user_data_response, map_sign_server_response};
 use crate::http::http_request_builder::HttpRequestFactory;
 use crate::proto::messages::webcast::WebcastResponse;
@@ -25,13 +23,13 @@ impl TikTokLiveHttpClient
         let url = format!("{}{}", TIKTOK_URL_WEB, "api-live/user/room");
         let option = self.factory
             .request()
-            .withUrl(url.as_str())
-            .withParam("uniqueId", request.user_name.as_str())
-            .withParam("sourceType", "54")
-            .asJson()
+            .with_url(url.as_str())
+            .with_param("uniqueId", request.user_name.as_str())
+            .with_param("sourceType", "54")
+            .as_json()
             .await;
 
-        if (option.is_none())
+        if option.is_none()
         {
             panic!("Unable to get info about user ")
         }
@@ -43,13 +41,13 @@ impl TikTokLiveHttpClient
         let url = format!("{}{}", TIKTOK_URL_WEBCAST, "room/info");
         let option = self.factory
             .request()
-            .withUrl(url.as_str())
-            .withParam("room_id", request.room_id.as_str())
-            .asJson()
+            .with_url(url.as_str())
+            .with_param("room_id", request.room_id.as_str())
+            .as_json()
             .await;
 
 
-        if (option.is_none())
+        if option.is_none()
         {
             panic!("Unable to get info about live room")
         }
@@ -62,21 +60,21 @@ impl TikTokLiveHttpClient
         //Preparing URL to sign
         let url_to_sign = self.factory
             .request()
-            .withUrl(format!("{}{}", TIKTOK_URL_WEBCAST, "im/fetch").as_str())
-            .withParam("room_id", request.room_id.as_str())
-            .asUrl();
+            .with_url(format!("{}{}", TIKTOK_URL_WEBCAST, "im/fetch").as_str())
+            .with_param("room_id", request.room_id.as_str())
+            .as_url();
 
         //Signing URL
         let option = self.factory
             .request()
-            .withUrl(TIKTOK_SIGN_API)
-            .withParam("client", "ttlive-rust")
-            .withParam("uuc", "1")
-            .withParam("url", url_to_sign.as_str())
-            .asJson()
+            .with_url(TIKTOK_SIGN_API)
+            .with_param("client", "ttlive-rust")
+            .with_param("uuc", "1")
+            .with_param("url", url_to_sign.as_str())
+            .as_json()
             .await;
 
-        if (option.is_none())
+        if option.is_none()
         {
             panic!("Unable sign url {}", url_to_sign.as_str())
         }
@@ -84,24 +82,24 @@ impl TikTokLiveHttpClient
         let sign_server_response = map_sign_server_response(json);
 
         //Getting credentials for connection to websocket
-        let mut response = self.factory
+        let response = self.factory
             .request()
-            .withReset()
-            .withTimeOut(self.settings.http_data.time_out)
-            .withUrl(sign_server_response.signed_url.as_str())
+            .with_reset()
+            .with_time_out(self.settings.http_data.time_out)
+            .with_url(sign_server_response.signed_url.as_str())
             .build_get_request()
             .send()
             .await
             .unwrap();
 
 
-        let optionalHeader = response.headers().get("set-cookie");
+        let optional_header = response.headers().get("set-cookie");
 
-        if (optionalHeader.is_none())
+        if optional_header.is_none()
         {
             panic!("Header was not received not provided")
         }
-        let headerValue = optionalHeader.unwrap().to_str().unwrap().to_string();
+        let header_value = optional_header.unwrap().to_str().unwrap().to_string();
 
 
         let protocol_buffer_message = response.bytes().await.unwrap();
@@ -112,22 +110,21 @@ impl TikTokLiveHttpClient
         //preparing websocket url
         let web_socket_url = self.factory
             .request()
-            .withUrl(webcast_response.pushServer.as_str())
-            .withParam("room_id", request.room_id.as_str())
-            .withParam("cursor", webcast_response.cursor.as_str())
-            .withParam("resp_content_type", "protobuf")
-            .withParam("internal_ext", webcast_response.internalExt.as_str())
-            .withParams(&webcast_response.routeParamsMap)
-            .asUrl();
+            .with_url(webcast_response.pushServer.as_str())
+            .with_param("room_id", request.room_id.as_str())
+            .with_param("cursor", webcast_response.cursor.as_str())
+            .with_param("resp_content_type", "protobuf")
+            .with_param("internal_ext", webcast_response.internalExt.as_str())
+            .with_params(&webcast_response.routeParamsMap)
+            .as_url();
 
         let url = url::Url::parse(web_socket_url.as_str()).unwrap();
 
         return LiveConnectionDataResponse
         {
             web_socket_timeout: self.settings.http_data.time_out,
-            web_socket_cookies: headerValue,
+            web_socket_cookies: header_value,
             web_socket_url: url,
         };
     }
-
 }

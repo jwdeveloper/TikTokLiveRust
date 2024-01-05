@@ -1,10 +1,11 @@
 use protobuf::Message;
-use tokio_tungstenite::tungstenite::handshake::client::{Request};
-use tokio_tungstenite::tungstenite::{connect};
-use crate::http::http_data::LiveConnectionDataResponse;
-use crate::proto::messages::webcast::{WebcastPushFrame, WebcastResponse};
+use tokio_tungstenite::tungstenite::connect;
+use tokio_tungstenite::tungstenite::handshake::client::Request;
+
 use crate::core::live_client::TikTokLiveClient;
 use crate::core::live_client_mapper::TikTokLiveMessageMapper;
+use crate::http::http_data::LiveConnectionDataResponse;
+use crate::proto::messages::webcast::{WebcastPushFrame, WebcastResponse};
 
 pub struct TikTokLiveWebsocketClient
 {
@@ -29,15 +30,15 @@ impl TikTokLiveWebsocketClient
             .body(())
             .unwrap();
 
-        let (mut socket, connectionResponse) = connect(request).expect("Failed to connect");
+        let (mut socket, _) = connect(request).expect("Failed to connect");
         loop {
             let msg = socket.read_message().expect("Error reading message");
             let buffer = msg.into_data();
 
             let mut push_frame = WebcastPushFrame::parse_from_bytes(buffer.as_slice()).expect("Unable to read push frame");
-            let mut webcast_response = WebcastResponse::parse_from_bytes(push_frame.Payload.as_mut_slice()).expect("Unable to read webcast response");
+            let webcast_response = WebcastResponse::parse_from_bytes(push_frame.Payload.as_mut_slice()).expect("Unable to read webcast response");
 
-            if (webcast_response.needsAck)
+            if webcast_response.needsAck
             {
                 let mut push_frame_ack = WebcastPushFrame::new();
                 push_frame_ack.PayloadType = "ack".to_string();
