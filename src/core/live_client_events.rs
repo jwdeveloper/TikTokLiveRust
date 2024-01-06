@@ -1,5 +1,5 @@
 use crate::core::live_client::TikTokLiveClient;
-use crate::data::live_events::TikTokLiveEvent;
+use crate::generated::events::TikTokLiveEvent;
 
 pub type TikTokEventHandler = fn(client: &TikTokLiveClient, event: &TikTokLiveEvent);
 
@@ -19,7 +19,7 @@ impl TikTokLiveEventObserver
         }
     }
 
-    pub fn attach(&mut self, handler: TikTokEventHandler)
+    pub fn subscribe(&mut self, handler: TikTokEventHandler)
     {
         self.events.push(handler);
     }

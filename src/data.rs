@@ -4,7 +4,6 @@ use std::time::Duration;
 use crate::data::live_common::{HttpData, TikTokLiveSettings};
 
 pub mod live_common;
-pub mod live_events;
 
 
 pub fn create_default_settings(host_name: &str) -> TikTokLiveSettings

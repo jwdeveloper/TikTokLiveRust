@@ -10,7 +10,6 @@ license = "MIT OR Apache-2.0"
 edition = "2021"
 authors = ["JW"]
 readme = "README.md"
-build = "src/build.rs"
 
 
 [dependencies]
@@ -35,3 +34,5 @@ tungstenite = "0.16.0"
 [build-dependencies]
 protobuf-codegen = "3.3.0"
 protoc-bin-vendored = "3.0.0"
+
+

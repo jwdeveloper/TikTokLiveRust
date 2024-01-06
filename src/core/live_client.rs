@@ -1,33 +1,53 @@
+use std::cell::Cell;
+use std::ops::Deref;
+use std::pin::Pin;
 use std::rc::Rc;
+use std::sync::Arc;
+use std::sync::atomic::AtomicBool;
 
 use log::{error, info, warn};
 
 use crate::core::live_client_events::TikTokLiveEventObserver;
 use crate::core::live_client_http::TikTokLiveHttpClient;
+use crate::core::live_client_mapper::TikTokLiveMessageMapper;
 use crate::core::live_client_websocket::TikTokLiveWebsocketClient;
 use crate::data::live_common::{ConnectionState, TikTokLiveInfo, TikTokLiveSettings};
 use crate::data::live_common::ConnectionState::{CONNECTED, CONNECTING, DISCONNECTED};
-use crate::data::live_events::TikTokLiveEvent;
+use crate::generated::events::TikTokLiveEvent;
 use crate::http::http_data::{LiveConnectionDataRequest, LiveDataRequest, LiveUserDataRequest};
 use crate::http::http_data::LiveStatus::HostOnline;
 
 pub struct TikTokLiveClient
 {
-    pub(crate) settings: TikTokLiveSettings,
-    pub(crate) http_client: TikTokLiveHttpClient,
-    pub(crate) event_observer:  Rc<TikTokLiveEventObserver>,
-    pub(crate) websocket_client: TikTokLiveWebsocketClient,
-    pub room_info: TikTokLiveInfo,
+    settings: TikTokLiveSettings,
+    http_client: TikTokLiveHttpClient,
+    event_observer: TikTokLiveEventObserver,
+    websocket_client: Arc<TikTokLiveWebsocketClient>,
+    room_info: TikTokLiveInfo,
 
 }
 
 impl TikTokLiveClient
 {
-
-
-    pub async fn connect(&self)
+    pub(crate) fn new(settings: TikTokLiveSettings,
+                      http_client: TikTokLiveHttpClient,
+                      event_observer: TikTokLiveEventObserver,
+                      websocket_client: TikTokLiveWebsocketClient,
+                      room_info: TikTokLiveInfo) -> Self
     {
-        if self.room_info.connection_state.take() != DISCONNECTED {
+        return TikTokLiveClient
+        {
+            settings,
+            http_client,
+            event_observer,
+            websocket_client: Arc::new(websocket_client),
+            room_info,
+        };
+    }
+
+    pub async fn connect(self)
+    {
+        if *(self.room_info.connection_state.lock().unwrap()) != DISCONNECTED {
             warn!("Client already connected!");
             return;
         }
@@ -58,8 +78,16 @@ impl TikTokLiveClient
             room_id: room_id.clone()
         }).await;
 
-        self.websocket_client.start(response, &self).await;
-        self.set_connection_state(CONNECTED);
+
+        let client_arc = Arc::new(self);
+
+        let ws = TikTokLiveWebsocketClient {
+            message_mapper: TikTokLiveMessageMapper {},
+            running: Arc::new(AtomicBool::new(false)),
+        };
+        ws.start(response, client_arc).await;
+
+
     }
 
     pub fn disconnect(&self)
@@ -74,9 +102,10 @@ impl TikTokLiveClient
     }
 
 
-    fn set_connection_state(&self, state: ConnectionState)
+    pub fn set_connection_state(&self, state: ConnectionState)
     {
-        self.room_info.connection_state.set(state);
-        info!("TikTokLive: {:?}", &self.room_info.connection_state.take());
+        let mut data = self.room_info.connection_state.lock().unwrap();
+        *data = state;
+        info!("TikTokLive: {:?}",*data);
     }
 }

@@ -4,7 +4,7 @@ use crate::data::live_common::TikTokLiveSettings;
 use crate::http::http_data::{LiveConnectionDataRequest, LiveConnectionDataResponse, LiveDataRequest, LiveDataResponse, LiveUserDataRequest, LiveUserDataResponse};
 use crate::http::http_data_mappers::{map_live_data_response, map_live_user_data_response, map_sign_server_response};
 use crate::http::http_request_builder::HttpRequestFactory;
-use crate::proto::messages::webcast::WebcastResponse;
+use crate::generated::messages::webcast::WebcastResponse;
 
 pub struct TikTokLiveHttpClient
 {
@@ -16,8 +16,13 @@ pub const TIKTOK_URL_WEB: &str = "https://www.tiktok.com/";
 pub const TIKTOK_URL_WEBCAST: &str = "https://webcast.tiktok.com/webcast/";
 pub const TIKTOK_SIGN_API: &str = "https://tiktok.eulerstream.com/webcast/sign_url";
 
+
+
+
 impl TikTokLiveHttpClient
 {
+
+
     pub async fn fetch_live_user_data(&self, request: LiveUserDataRequest) -> LiveUserDataResponse
     {
         let url = format!("{}{}", TIKTOK_URL_WEB, "api-live/user/room");
