@@ -43,7 +43,7 @@ Do you prefer other programming languages?
 ## Getting started
 ```toml
 [dependencies]
- tiktoklive = "0.0.1"
+ tiktoklive = "0.0.5"
 ```
 ```rust
 #[tokio::main]
