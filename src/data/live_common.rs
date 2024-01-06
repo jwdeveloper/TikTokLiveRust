@@ -1,5 +1,6 @@
 use std::cell::Cell;
 use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 #[derive(Clone)]
@@ -33,7 +34,7 @@ pub struct TikTokLiveInfo
     pub host_name: String,
     pub title: String,
     pub language: String,
-    pub connection_state: Cell<ConnectionState>,
+    pub connection_state: Mutex<ConnectionState>,
 }
 
 #[derive(PartialEq, Debug)]
