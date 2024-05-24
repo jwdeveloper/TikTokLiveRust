@@ -35,18 +35,25 @@ impl TikTokLiveWebsocketClient
     {
         let host = response.web_socket_url.host_str().expect("Invalid host in WebSocket URL");
 
-        let request = Request::builder()
+          let request = Request::builder()
             .method("GET")
             .uri(response.web_socket_url.to_string())
             .header("Host", host)
             .header("Upgrade", "websocket")
-            .header("Connection", "upgrade")
+            .header("Connection", "keep-alive")
+            .header("Cache-Control", "max-age=0")
+            .header("Accept", "text/html,application/json,application/protobuf")
             .header("Sec-Websocket-Key", "asd")
+            .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
+            .header("Referer", "https://www.tiktok.com/")
+            .header("Origin", "https://www.tiktok.com")
+            .header("Accept-Language", "en-US,en;q=0.9")
+            .header("Accept-Encoding", "gzip, deflater")
             .header("Cookie", response.web_socket_cookies)
             .header("Sec-Websocket-Version", "13")
             .body(())
             .unwrap();
-
+        
         let (mut socket, _) = connect(request).expect("Failed to connect");
 
         client.set_connection_state(CONNECTED);
