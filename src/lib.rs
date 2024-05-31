@@ -1,5 +1,4 @@
 use crate::core::live_client_builder::TikTokLiveBuilder;
-use crate::core::live_client_http::TikTokLiveHttpClient;
 
 ///  # Data structures
 pub mod data;
@@ -12,8 +11,6 @@ pub mod http;
 
 ///  # ProtocolBuffer structures
 pub mod generated;
-
-
 
 ///
 /// # Entry point of library used to create new instance of TikTokLive client
@@ -30,15 +27,11 @@ pub mod generated;
 ///
 pub struct TikTokLive {}
 
-impl TikTokLive
-{
+impl TikTokLive {
     ///
     /// Returns builder for creating new TikTokLiveClient
     ///
-    pub fn new_client(user_name: &str) -> TikTokLiveBuilder
-    {
+    pub fn new_client(user_name: &str) -> TikTokLiveBuilder {
         TikTokLiveBuilder::new(user_name)
     }
-
-
 }
