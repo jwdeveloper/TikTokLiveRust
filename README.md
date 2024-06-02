@@ -43,58 +43,87 @@ Do you prefer other programming languages?
 ## Getting started
 ```toml
 [dependencies]
- tiktoklive = "0.0.5"
+ tiktoklive = "0.0.7"
 ```
 ```rust
+use std::time::Duration;
+use tiktoklive::core::live_client::TikTokLiveClient;
+use tiktoklive::data::live_common::TikTokLiveSettings;
+use tiktoklive::generated::events::TikTokLiveEvent;
+use tiktoklive::TikTokLive;
+use tokio::signal;
+
 #[tokio::main]
 async fn main() {
     let user_name = "dash4214";
-    let mut client = TikTokLive::new_client(user_name)
+    let client = TikTokLive::new_client(user_name)
         .configure(configure)
         .on_event(handle_event)
         .build();
 
-    client.connect().await;
+    let _ = tokio::spawn(async move {
+        client.connect().await;
+    });
 
-    let mut input = String::new();
-    if io::stdin().read_line(&mut input).is_ok() && input.trim() == "stop"
-    {
-        //client.disconnect();
-    }
+    //Wait for Ctrl+C to exit
+    signal::ctrl_c().await.expect("Failed to listen for Ctrl+C");
 }
 
-fn handle_event(client: &TikTokLiveClient, event: &TikTokLiveEvent)
-{
+fn handle_event(_client: &TikTokLiveClient, event: &TikTokLiveEvent) {
     match event {
-        TikTokLiveEvent::OnMember(joinEvent) =>
-            {
-                println!("user: {}  joined", joinEvent.raw_data.user.nickname);
-            }
-        TikTokLiveEvent::OnChat(chatEvent) =>
-            {
-                println!("user: {} -> {} ", chatEvent.raw_data.user.nickname, chatEvent.raw_data.content);
-            }
-        TikTokLiveEvent::OnGift(giftEvent) =>
-            {
-                let nick = &giftEvent.raw_data.user.nickname;
-                let gift_name = &giftEvent.raw_data.gift.name;
-                let gifts_amount = giftEvent.raw_data.gift.combo;
+        TikTokLiveEvent::OnMember(join_event) => {
+            println!("user: {}  joined", join_event.raw_data.user.nickname);
+        }
 
-                println!("user: {} sends gift: {} x {}", nick, gift_name, gifts_amount);
-            }
+        TikTokLiveEvent::OnChat(chat_event) => {
+            println!(
+                "user: {} -> {} ",
+                chat_event.raw_data.user.nickname, chat_event.raw_data.content
+            );
+        }
+
+        TikTokLiveEvent::OnGift(gift_event) => {
+            let nick = &gift_event.raw_data.user.nickname;
+            let gift_name = &gift_event.raw_data.gift.name;
+            let gifts_amount = gift_event.raw_data.gift.combo;
+
+            println!(
+                "user: {} sends gift: {} x {}",
+                nick, gift_name, gifts_amount
+            );
+        }
+
+        TikTokLiveEvent::OnLike(like_event) => {
+            let nick = &like_event.raw_data.user.nickname;
+            println!("user: {} likes", nick);
+        }
         _ => {}
     }
 }
 
-fn configure(settings: &mut TikTokLiveSettings)
-{
+fn configure(settings: &mut TikTokLiveSettings) {
     settings.http_data.time_out = Duration::from_secs(12);
 }
-
 ```
 
+## For streams that are flagged adult/disturbing
+
+#### You should use an authenticated account by injecting the cookie in the headers
+
+```rust
+fn configure(settings: &mut TikTokLiveSettings) {
+    settings.http_data.time_out = Duration::from_secs(12);
+    settings
+        .http_data
+        .headers
+        .insert("Cookie".to_string(), "your-cookie".to_string());
+}
+```
 
 
 
 ## Contributing
 Your improvements are welcome! Feel free to open an <a href="https://github.com/jwdeveloper/TikTok-Live-Java/issues">issue</a> or <a href="https://github.com/jwdeveloper/TikTok-Live-Java/pulls">pull request</a>.
+
+## Contributors
+[Zmole Cristian](https://github.com/ZmoleCristian)
