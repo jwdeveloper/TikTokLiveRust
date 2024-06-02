@@ -1,6 +1,6 @@
 [package]
 name = "tiktoklive"
-version = "0.0.7"
+version = "0.0.8"
 description = "A Rust library. Use it to receive live stream events such as comments and gifts in realtime from TikTok LIVE No credentials are required."
 homepage = "https://github.com/jwdeveloper/TikTokLiveRust"
 repository = "https://github.com/jwdeveloper/TikTokLiveRust"
