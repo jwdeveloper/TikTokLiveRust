@@ -23,7 +23,7 @@
 
 /// Generated files are compatible only with the same version
 /// of protobuf runtime.
-const _PROTOBUF_VERSION_CHECK: () = ::protobuf::VERSION_3_3_0;
+const _PROTOBUF_VERSION_CHECK: () = ::protobuf::VERSION_3_4_0;
 
 #[derive(Clone,Copy,PartialEq,Eq,Debug,Hash)]
 // @@protoc_insertion_point(enum:TikTok.AuditStatus)
@@ -2651,7 +2651,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     GIFTUSERBUYAUTHNOTICE\x10\x0c*C\n\x05Scene\x12\x11\n\rSCENE_UNKNOWN\x10\
     \0\x12\x11\n\rSCENE_CO_HOST\x10\x02\x12\x14\n\x10SCENE_MULTI_LIVE\x10\
     \x04B/\n+io.github.jwdeveloper.tiktok.messages.enumsP\x01b\x06proto3\
-";
+    ";
 
 /// `FileDescriptorProto` object which was a source for this generated file
 fn file_descriptor_proto() -> &'static ::protobuf::descriptor::FileDescriptorProto {
