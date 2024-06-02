@@ -43,7 +43,8 @@ Do you prefer other programming languages?
 ## Getting started
 ```toml
 [dependencies]
- tiktoklive = "0.0.9"
+ tiktoklive = "0.0.11"
+ tokio = { version = "1.35.1", features = ["full"] }
 ```
 ```rust
 use std::time::Duration;
@@ -55,7 +56,7 @@ use tokio::signal;
 
 #[tokio::main]
 async fn main() {
-    let user_name = "dash4214";
+    let user_name = "tragdate";
     let client = TikTokLive::new_client(user_name)
         .configure(configure)
         .on_event(handle_event)
