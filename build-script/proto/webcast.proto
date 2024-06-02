@@ -793,5 +793,3 @@ message RoomVerifyMessage {
   int64 noticeType = 4;
   bool closeRoom = 5;
 }
-
-

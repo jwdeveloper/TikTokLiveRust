@@ -7,7 +7,7 @@ use tokio::signal;
 
 #[tokio::main]
 async fn main() {
-    let user_name = "dash4214";
+    let user_name = "tragdate";
     let client = TikTokLive::new_client(user_name)
         .configure(configure)
         .on_event(handle_event)
