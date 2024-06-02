@@ -43,7 +43,7 @@ Do you prefer other programming languages?
 ## Getting started
 ```toml
 [dependencies]
- tiktoklive = "0.0.7"
+ tiktoklive = "0.0.8"
 ```
 ```rust
 use std::time::Duration;
