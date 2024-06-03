@@ -12,7 +12,8 @@ pub fn map_live_user_data_response(json: String) -> LiveUserDataResponse {
         panic!("fetchRoomIdFromTiktokApi -> Unable to fetch roomID, contact the developer");
     }
     if message.eq("user_not_found") {
-        panic!("TikTokUserInfo.UserStatus.NotFound");
+        eprintln!("The user was not found");
+        std::process::exit(3);
     }
 
     let option_data = json_value["data"].as_object();
