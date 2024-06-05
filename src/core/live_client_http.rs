@@ -1,6 +1,7 @@
 use protobuf::Message;
 
 use crate::data::live_common::TikTokLiveSettings;
+use crate::errors::LibError;
 use crate::generated::messages::webcast::WebcastResponse;
 use crate::http::http_data::{
     LiveConnectionDataRequest, LiveConnectionDataResponse, LiveDataRequest, LiveDataResponse,
@@ -21,7 +22,10 @@ pub const TIKTOK_URL_WEBCAST: &str = "https://webcast.tiktok.com/webcast/";
 pub const TIKTOK_SIGN_API: &str = "https://tiktok.eulerstream.com/webcast/sign_url";
 
 impl TikTokLiveHttpClient {
-    pub async fn fetch_live_user_data(&self, request: LiveUserDataRequest) -> LiveUserDataResponse {
+    pub async fn fetch_live_user_data(
+        &self,
+        request: LiveUserDataRequest,
+    ) -> Result<LiveUserDataResponse, LibError> {
         let url = format!("{}{}", TIKTOK_URL_WEB, "api-live/user/room");
         let option = self
             .factory
@@ -36,9 +40,15 @@ impl TikTokLiveHttpClient {
             panic!("Unable to get info about user ")
         }
         let json = option.unwrap();
-        return map_live_user_data_response(json);
+        match map_live_user_data_response(json) {
+            Ok(response) => Ok(response),
+            Err(e) => Err(e),
+        }
     }
-    pub async fn fetch_live_data(&self, request: LiveDataRequest) -> LiveDataResponse {
+    pub async fn fetch_live_data(
+        &self,
+        request: LiveDataRequest,
+    ) -> Result<LiveDataResponse, LibError> {
         let url = format!("{}{}", TIKTOK_URL_WEBCAST, "room/info");
         let option = self
             .factory
@@ -52,7 +62,11 @@ impl TikTokLiveHttpClient {
             panic!("Unable to get info about live room")
         }
         let json = option.unwrap();
-        return map_live_data_response(json);
+
+        match map_live_data_response(json) {
+            Ok(response) => Ok(response),
+            Err(e) => Err(e),
+        }
     }
 
     pub async fn fetch_live_connection_data(

@@ -9,6 +9,7 @@ use crate::core::live_client_mapper::TikTokLiveMessageMapper;
 use crate::core::live_client_websocket::TikTokLiveWebsocketClient;
 use crate::data::live_common::ConnectionState::{CONNECTING, DISCONNECTED};
 use crate::data::live_common::{ConnectionState, TikTokLiveInfo, TikTokLiveSettings};
+use crate::errors::LibError;
 use crate::generated::events::TikTokLiveEvent;
 use crate::http::http_data::LiveStatus::HostOnline;
 use crate::http::http_data::{LiveConnectionDataRequest, LiveDataRequest, LiveUserDataRequest};
@@ -38,10 +39,10 @@ impl TikTokLiveClient {
         }
     }
 
-    pub async fn connect(self) {
+    pub async fn connect(self) -> Result<(), LibError> {
         if *(self.room_info.connection_state.lock().unwrap()) != DISCONNECTED {
             warn!("Client already connected!");
-            return;
+            return Ok(());
         }
 
         self.set_connection_state(CONNECTING);
@@ -52,7 +53,7 @@ impl TikTokLiveClient {
             .fetch_live_user_data(LiveUserDataRequest {
                 user_name: self.settings.host_name.clone(),
             })
-            .await;
+            .await?;
 
         info!("Getting live room information's");
         let room_id = response.room_id;
@@ -61,13 +62,14 @@ impl TikTokLiveClient {
             .fetch_live_data(LiveDataRequest {
                 room_id: room_id.clone(),
             })
-            .await;
+            .await?;
         if response.live_status != HostOnline {
             error!(
                 "Live stream for host is not online!, current status {:?}",
                 response.live_status
             );
-            return;
+            self.set_connection_state(DISCONNECTED);
+            return Err(LibError::HostNotOnline);
         }
 
         info!("Getting live connections information's");
@@ -85,6 +87,8 @@ impl TikTokLiveClient {
             running: Arc::new(AtomicBool::new(false)),
         };
         ws.start(response, client_arc).await;
+
+        Ok(())
     }
 
     pub fn disconnect(&self) {
