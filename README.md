@@ -41,85 +41,144 @@ Do you prefer other programming languages?
 - [Contributing](#contributing)
 
 ## Getting started
+
+### Dependencies
+
 ```toml
 [dependencies]
- tiktoklive = "0.0.11"
- tokio = { version = "1.35.1", features = ["full"] }
+tiktoklive = "0.0.12"
+tokio = { version = "1.35.1", features = ["full"] }
+log = "0.4"
+env_logger = "0.10.1"
 ```
+
+### Usage example
+
 ```rust
-use std::time::Duration;
-use tiktoklive::core::live_client::TikTokLiveClient;
-use tiktoklive::data::live_common::TikTokLiveSettings;
-use tiktoklive::generated::events::TikTokLiveEvent;
-use tiktoklive::TikTokLive;
-use tokio::signal;
+use env_logger::{Builder, Env}; // Importing the logger builder and environment configuration
+use log::LevelFilter; // Importing log level filter
+use std::time::Duration; // Importing Duration for timeout settings
+use tiktoklive::{
+    // Importing necessary modules and structs from tiktoklive crate
+    core::live_client::TikTokLiveClient,
+    data::live_common::TikTokLiveSettings,
+    errors::LibError,
+    generated::events::TikTokLiveEvent,
+    TikTokLive,
+};
+use tokio::signal; // Importing signal handling from tokio
 
-#[tokio::main]
+#[tokio::main] // Main function is asynchronous and uses tokio runtime
 async fn main() {
-    let user_name = "tragdate";
-    let client = TikTokLive::new_client(user_name)
-        .configure(configure)
-        .on_event(handle_event)
-        .build();
+    init_logger("info"); // Initialize logger with "info" level
 
-    let _ = tokio::spawn(async move {
-        client.connect().await;
+    let user_name = "tragdate"; // Define the TikTok username
+
+    let client = create_client(user_name); // Create a client for the given username
+
+    // Spawn a new asynchronous task to connect the client
+    let handle = tokio::spawn(async move {
+        // Attempt to connect the client
+        if let Err(e) = client.connect().await {
+            match e {
+                // Match on the error type
+                LibError::LiveStatusFieldMissing => {
+                    // Specific error case
+                    println!(
+                        "Failed to get live status (probably needs authenticated client): {}",
+                        e
+                    );
+                    let auth_client = create_client_with_cookies(user_name); // Create an authenticated client
+                    if let Err(e) = auth_client.connect().await {
+                        // Attempt to connect the authenticated client
+                        eprintln!("Error connecting to TikTok Live after retry: {}", e);
+                    }
+                }
+                _ => {
+                    // General error case
+                    eprintln!("Error connecting to TikTok Live: {}", e);
+                }
+            }
+        }
     });
 
-    //Wait for Ctrl+C to exit
-    signal::ctrl_c().await.expect("Failed to listen for Ctrl+C");
+    signal::ctrl_c().await.expect("Failed to listen for Ctrl+C"); // Wait for Ctrl+C signal to gracefully shut down
+
+    handle.await.expect("The spawned task has panicked"); // Await the spawned task to ensure it completes
 }
 
+// Function to handle different types of TikTok live events
 fn handle_event(_client: &TikTokLiveClient, event: &TikTokLiveEvent) {
     match event {
+        // Match on the event type
         TikTokLiveEvent::OnMember(join_event) => {
-            println!("user: {}  joined", join_event.raw_data.user.nickname);
+            // Handle member join event
+            println!("user: {} joined", join_event.raw_data.user.nickname);
         }
-
         TikTokLiveEvent::OnChat(chat_event) => {
+            // Handle chat event
             println!(
-                "user: {} -> {} ",
+                "user: {} -> {}",
                 chat_event.raw_data.user.nickname, chat_event.raw_data.content
             );
         }
-
         TikTokLiveEvent::OnGift(gift_event) => {
+            // Handle gift event
             let nick = &gift_event.raw_data.user.nickname;
             let gift_name = &gift_event.raw_data.gift.name;
             let gifts_amount = gift_event.raw_data.gift.combo;
-
             println!(
                 "user: {} sends gift: {} x {}",
                 nick, gift_name, gifts_amount
             );
         }
-
         TikTokLiveEvent::OnLike(like_event) => {
+            // Handle like event
             let nick = &like_event.raw_data.user.nickname;
             println!("user: {} likes", nick);
         }
-        _ => {}
+        _ => {} // Ignore other events
     }
 }
 
-fn configure(settings: &mut TikTokLiveSettings) {
-    settings.http_data.time_out = Duration::from_secs(12);
+// Function to initialize the logger with a default log level
+fn init_logger(default_level: &str) {
+    let env = Env::default().filter_or("LOG_LEVEL", default_level); // Set default log level from environment or use provided level
+    Builder::from_env(env) // Build the logger from environment settings
+        .filter_module("tiktoklive", LevelFilter::Debug) // Set log level for tiktoklive module
+        .init(); // Initialize the logger
 }
-```
 
-## For streams that are flagged adult/disturbing
-
-#### You should use an authenticated account by injecting the cookie in the headers
-
-```rust
+// Function to configure the TikTok live settings
 fn configure(settings: &mut TikTokLiveSettings) {
-    settings.http_data.time_out = Duration::from_secs(12);
+    settings.http_data.time_out = Duration::from_secs(12); // Set HTTP timeout to 12 seconds
+}
+
+// Function to configure the TikTok live settings with cookies for authentication
+fn configure_with_cookies(settings: &mut TikTokLiveSettings) {
+    settings.http_data.time_out = Duration::from_secs(12); // Set HTTP timeout to 12 seconds
+    let contents = "YOUR_COOKIES"; // Placeholder for cookies
     settings
         .http_data
         .headers
-        .insert("Cookie".to_string(), "your-cookie".to_string());
+        .insert("Cookie".to_string(), contents.to_string()); // Insert cookies into HTTP headers
 }
-```
+
+// Function to create a TikTok live client for the given username
+fn create_client(user_name: &str) -> TikTokLiveClient {
+    TikTokLive::new_client(user_name) // Create a new client
+        .configure(configure) // Configure the client
+        .on_event(handle_event) // Set the event handler
+        .build() // Build the client
+}
+
+// Function to create a TikTok live client with cookies for the given username
+fn create_client_with_cookies(user_name: &str) -> TikTokLiveClient {
+    TikTokLive::new_client(user_name) // Create a new client
+        .configure(configure_with_cookies) // Configure the client with cookies
+        .on_event(handle_event) // Set the event handler
+        .build() // Build the client
+}```
 
 
 

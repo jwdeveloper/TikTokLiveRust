@@ -12,6 +12,9 @@ pub mod http;
 ///  # ProtocolBuffer structures
 pub mod generated;
 
+// #Errors Library
+pub mod errors;
+
 ///
 /// # Entry point of library used to create new instance of TikTokLive client
 ///
