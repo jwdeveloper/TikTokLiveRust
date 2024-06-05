@@ -178,7 +178,8 @@ fn create_client_with_cookies(user_name: &str) -> TikTokLiveClient {
         .configure(configure_with_cookies) // Configure the client with cookies
         .on_event(handle_event) // Set the event handler
         .build() // Build the client
-}```
+}
+```
 
 
 
