@@ -39,7 +39,7 @@ impl TikTokLiveClient {
         }
     }
 
-    pub async fn connect(self) -> Result<(), LibError> {
+    pub async fn connect(mut self) -> Result<(), LibError> {
         if *(self.room_info.connection_state.lock().unwrap()) != DISCONNECTED {
             warn!("Client already connected!");
             return Ok(());
@@ -63,6 +63,8 @@ impl TikTokLiveClient {
                 room_id: room_id.clone(),
             })
             .await?;
+
+        self.room_info.client_data = response.json;
         if response.live_status != HostOnline {
             error!(
                 "Live stream for host is not online!, current status {:?}",
@@ -86,7 +88,7 @@ impl TikTokLiveClient {
             message_mapper: TikTokLiveMessageMapper {},
             running: Arc::new(AtomicBool::new(false)),
         };
-        ws.start(response, client_arc).await;
+        let _ = ws.start(response?, client_arc).await;
 
         Ok(())
     }
@@ -98,6 +100,10 @@ impl TikTokLiveClient {
 
     pub fn publish_event(&self, event: TikTokLiveEvent) {
         self.event_observer.publish(self, event);
+    }
+
+    pub fn get_room_info(&self) -> &String {
+        &self.room_info.client_data
     }
 
     pub fn set_connection_state(&self, state: ConnectionState) {

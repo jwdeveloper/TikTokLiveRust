@@ -17,6 +17,7 @@ pub struct LiveDataRequest {
     pub room_id: String,
 }
 
+#[derive(Debug, PartialEq)]
 pub struct LiveDataResponse {
     pub json: String,
     pub live_status: LiveStatus,

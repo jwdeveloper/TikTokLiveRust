@@ -46,8 +46,9 @@ Do you prefer other programming languages?
 
 ```toml
 [dependencies]
-tiktoklive = "0.0.12"
+tiktoklive = "0.0.13"
 tokio = { version = "1.35.1", features = ["full"] }
+serde_json = "1.0"
 log = "0.4"
 env_logger = "0.10.1"
 ```
@@ -57,11 +58,12 @@ env_logger = "0.10.1"
 ```rust
 use env_logger::{Builder, Env}; // Importing the logger builder and environment configuration
 use log::LevelFilter; // Importing log level filter
+use log::{error, warn};
 use std::time::Duration; // Importing Duration for timeout settings
 use tiktoklive::{
     // Importing necessary modules and structs from tiktoklive crate
     core::live_client::TikTokLiveClient,
-    data::live_common::TikTokLiveSettings,
+    data::live_common::{ClientData, StreamData, TikTokLiveSettings},
     errors::LibError,
     generated::events::TikTokLiveEvent,
     TikTokLive,
@@ -84,19 +86,19 @@ async fn main() {
                 // Match on the error type
                 LibError::LiveStatusFieldMissing => {
                     // Specific error case
-                    println!(
+                    warn!(
                         "Failed to get live status (probably needs authenticated client): {}",
                         e
                     );
                     let auth_client = create_client_with_cookies(user_name); // Create an authenticated client
                     if let Err(e) = auth_client.connect().await {
                         // Attempt to connect the authenticated client
-                        eprintln!("Error connecting to TikTok Live after retry: {}", e);
+                        error!("Error connecting to TikTok Live after retry: {}", e);
                     }
                 }
                 _ => {
                     // General error case
-                    eprintln!("Error connecting to TikTok Live: {}", e);
+                    error!("Error connecting to TikTok Live: {}", e);
                 }
             }
         }
@@ -107,9 +109,35 @@ async fn main() {
     handle.await.expect("The spawned task has panicked"); // Await the spawned task to ensure it completes
 }
 
-// Function to handle different types of TikTok live events
-fn handle_event(_client: &TikTokLiveClient, event: &TikTokLiveEvent) {
+fn handle_event(client: &TikTokLiveClient, event: &TikTokLiveEvent) {
     match event {
+        TikTokLiveEvent::OnConnected(..) => {
+            // This is an experimental and unstable feature
+            // Get room info from the client
+            let room_info = client.get_room_info();
+            // Parse the room info
+            let client_data: ClientData = serde_json::from_str(room_info).unwrap();
+            // Parse the stream data
+            let stream_data: StreamData = serde_json::from_str(
+                &client_data
+                    .data
+                    .stream_url
+                    .live_core_sdk_data
+                    .pull_data
+                    .stream_data,
+            )
+            .unwrap();
+            // Get the video URL for the low definition stream with fallback to the high definition stream in a flv format
+            let video_url = stream_data
+                .data
+                .ld
+                .map(|ld| ld.main.flv)
+                .or_else(|| stream_data.data.sd.map(|sd| sd.main.flv))
+                .or_else(|| stream_data.data.origin.map(|origin| origin.main.flv))
+                .expect("None of the stream types set");
+            println!("room info: {}", video_url);
+        }
+
         // Match on the event type
         TikTokLiveEvent::OnMember(join_event) => {
             // Handle member join event
@@ -157,11 +185,12 @@ fn configure(settings: &mut TikTokLiveSettings) {
 // Function to configure the TikTok live settings with cookies for authentication
 fn configure_with_cookies(settings: &mut TikTokLiveSettings) {
     settings.http_data.time_out = Duration::from_secs(12); // Set HTTP timeout to 12 seconds
-    let contents = "YOUR_COOKIES"; // Placeholder for cookies
+    let contents = ""; // Placeholder for cookies
     settings
         .http_data
         .headers
-        .insert("Cookie".to_string(), contents.to_string()); // Insert cookies into HTTP headers
+        .insert("Cookie".to_string(), contents.to_string());
+    // Insert cookies into HTTP headers
 }
 
 // Function to create a TikTok live client for the given username
@@ -180,6 +209,55 @@ fn create_client_with_cookies(user_name: &str) -> TikTokLiveClient {
         .build() // Build the client
 }
 ```
+
+## Library errors table 
+
+You can catch errors on events with 
+
+```rust
+use tiktoklive::LibError;
+
+if let Err(e) = client.connect().await {
+    match e {
+        LibError::UserFieldMissing => {
+            println!("User field is missing");
+        }
+        _ => {
+            eprintln!("Error connecting to TikTok Live: {}", e);
+        }
+    }
+}
+```
+
+| Error type | Description |
+| --- | --- |
+| RoomIDFieldMissing | Room ID field is missing, contact developer |
+| UserFieldMissing | User field is missing |
+| UserDataFieldMissing | User data field is missing |
+| LiveDataFieldMissing | Live data field is missing |
+| JsonParseError | Error parsing JSON |
+| UserMessageFieldMissing | User message field is missing |
+| ParamsError | Params error |
+| UserStatusFieldMissing | User status field is missing |
+| LiveStatusFieldMissing | Live status field is missing |
+| TitleFieldMissing | Title field is missing |
+| UserCountFieldMissing | User count field is missing |
+| StatsFieldMissing | Stats field is missing |
+| LikeCountFieldMissing | Like count is missing |
+| TotalUserFieldMissing | Total user field is missing |
+| LiveRoomFieldMissing | Live room field is missing |
+| StartTimeFieldMissing | Start time field is missing |
+| UserNotFound | User not found |
+| HostNotOnline | Live stream for host is not online!, current status HostOffline |
+| InvalidHost | Invalid host in WebSocket URL |
+| WebSocketConnectFailed | Failed to connect to WebSocket |
+| PushFrameParseError | Unable to read push frame |
+| WebcastResponseParseError | Unable to read webcast response |
+| AckPacketSendError | Unable to send ack packet |
+| HttpRequestFailed | HTTP request failed |
+| UrlSigningFailed | URL signing failed |
+| HeaderNotReceived | Header was not received |
+| BytesParseError | Unable to parse bytes to Push Frame |
 
 
 ?

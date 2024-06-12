@@ -36,15 +36,10 @@ impl TikTokLiveHttpClient {
             .as_json()
             .await;
 
-        if option.is_none() {
-            panic!("Unable to get info about user ")
-        }
-        let json = option.unwrap();
-        match map_live_user_data_response(json) {
-            Ok(response) => Ok(response),
-            Err(e) => Err(e),
-        }
+        let json = option.ok_or(LibError::HttpRequestFailed)?;
+        map_live_user_data_response(json).map_err(|e| e)
     }
+
     pub async fn fetch_live_data(
         &self,
         request: LiveDataRequest,
@@ -58,22 +53,15 @@ impl TikTokLiveHttpClient {
             .as_json()
             .await;
 
-        if option.is_none() {
-            panic!("Unable to get info about live room")
-        }
-        let json = option.unwrap();
-
-        match map_live_data_response(json) {
-            Ok(response) => Ok(response),
-            Err(e) => Err(e),
-        }
+        let json = option.ok_or(LibError::HttpRequestFailed)?;
+        map_live_data_response(json).map_err(|e| e)
     }
 
     pub async fn fetch_live_connection_data(
         &self,
         request: LiveConnectionDataRequest,
-    ) -> LiveConnectionDataResponse {
-        //Preparing URL to sign
+    ) -> Result<LiveConnectionDataResponse, LibError> {
+        // Preparing URL to sign
         let url_to_sign = self
             .factory
             .request()
@@ -81,7 +69,7 @@ impl TikTokLiveHttpClient {
             .with_param("room_id", request.room_id.as_str())
             .as_url();
 
-        //Signing URL
+        // Signing URL
         let option = self
             .factory
             .request()
@@ -92,13 +80,10 @@ impl TikTokLiveHttpClient {
             .as_json()
             .await;
 
-        if option.is_none() {
-            panic!("Unable sign url {}", url_to_sign.as_str())
-        }
-        let json = option.unwrap();
+        let json = option.ok_or(LibError::UrlSigningFailed)?;
         let sign_server_response = map_sign_server_response(json);
 
-        //Getting credentials for connection to websocket
+        // Getting credentials for connection to websocket
         let response = self
             .factory
             .request()
@@ -108,20 +93,23 @@ impl TikTokLiveHttpClient {
             .build_get_request()
             .send()
             .await
-            .unwrap();
+            .map_err(|_| LibError::HttpRequestFailed)?;
 
         let optional_header = response.headers().get("set-cookie");
+        let header_value = optional_header
+            .ok_or(LibError::HeaderNotReceived)?
+            .to_str()
+            .map_err(|_| LibError::HeaderNotReceived)?
+            .to_string();
 
-        if optional_header.is_none() {
-            panic!("Header was not received not provided")
-        }
-        let header_value = optional_header.unwrap().to_str().unwrap().to_string();
-
-        let protocol_buffer_message = response.bytes().await.unwrap();
+        let protocol_buffer_message = response
+            .bytes()
+            .await
+            .map_err(|_| LibError::BytesParseError)?;
         let webcast_response = WebcastResponse::parse_from_bytes(protocol_buffer_message.as_ref())
-            .expect("Unable to parse bytes to Push Frame!");
+            .map_err(|_| LibError::BytesParseError)?;
 
-        //preparing websocket url
+        // Preparing websocket URL
         let web_socket_url = self
             .factory
             .request()
@@ -133,12 +121,11 @@ impl TikTokLiveHttpClient {
             .with_params(&webcast_response.routeParamsMap)
             .as_url();
 
-        let url = url::Url::parse(web_socket_url.as_str()).unwrap();
-
-        return LiveConnectionDataResponse {
+        let url = url::Url::parse(web_socket_url.as_str()).map_err(|_| LibError::InvalidHost)?;
+        Ok(LiveConnectionDataResponse {
             web_socket_timeout: self.settings.http_data.time_out,
             web_socket_cookies: header_value,
             web_socket_url: url,
-        };
+        })
     }
 }

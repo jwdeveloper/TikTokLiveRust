@@ -20,6 +20,15 @@ pub enum LibError {
     StartTimeFieldMissing,
     UserNotFound,
     HostNotOnline,
+    InvalidHost,
+    WebSocketConnectFailed,
+    PushFrameParseError,
+    WebcastResponseParseError,
+    AckPacketSendError,
+    HttpRequestFailed,
+    UrlSigningFailed,
+    HeaderNotReceived,
+    BytesParseError,
 }
 
 impl fmt::Display for LibError {
@@ -39,7 +48,7 @@ impl fmt::Display for LibError {
             LibError::TitleFieldMissing => write!(f, "Title field is missing"),
             LibError::UserCountFieldMissing => write!(f, "User count field is missing"),
             LibError::StatsFieldMissing => write!(f, "Stats field is missing"),
-            LibError::LikeCountFieldMissing => write!(f, "Like count field is missing"),
+            LibError::LikeCountFieldMissing => write!(f, "Like count is missing"),
             LibError::TotalUserFieldMissing => write!(f, "Total user field is missing"),
             LibError::LiveRoomFieldMissing => write!(f, "Live room field is missing"),
             LibError::StartTimeFieldMissing => write!(f, "Start time field is missing"),
@@ -48,6 +57,15 @@ impl fmt::Display for LibError {
                 f,
                 "Live stream for host is not online!, current status HostOffline"
             ),
+            LibError::InvalidHost => write!(f, "Invalid host in WebSocket URL"),
+            LibError::WebSocketConnectFailed => write!(f, "Failed to connect to WebSocket"),
+            LibError::PushFrameParseError => write!(f, "Unable to read push frame"),
+            LibError::WebcastResponseParseError => write!(f, "Unable to read webcast response"),
+            LibError::AckPacketSendError => write!(f, "Unable to send ack packet"),
+            LibError::HttpRequestFailed => write!(f, "HTTP request failed"),
+            LibError::UrlSigningFailed => write!(f, "URL signing failed"),
+            LibError::HeaderNotReceived => write!(f, "Header was not received"),
+            LibError::BytesParseError => write!(f, "Unable to parse bytes to Push Frame!"),
         }
     }
 }
