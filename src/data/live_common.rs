@@ -102,7 +102,7 @@ pub struct Data {
     pub has_commerce_goods: bool,
     pub has_more_history_comment: bool,
     pub has_used_music: bool,
-    pub hashtag: Hashtag,
+    pub hashtag: Option<Hashtag>,
     pub have_wishlist: bool,
     pub history_comment_cursor: String,
     pub history_comment_list: Vec<Value>,
@@ -393,7 +393,7 @@ pub struct Owner {
 pub struct BadgeList {
     #[serde(rename = "OpenWebURL")]
     pub open_web_url: String,
-    pub combine: Combine,
+    pub combine: Option<Combine>,
     pub display: bool,
     pub display_status: i64,
     pub display_type: i64,
@@ -412,14 +412,14 @@ pub struct Combine {
     pub background_auto_mirrored: bool,
     pub background_dark_mode: Background,
     pub display_type: i64,
-    pub font_style: FontStyle,
+    pub font_style: Option<FontStyle>,
     pub icon: Cover,
     pub icon_auto_mirrored: bool,
     pub multi_guest_show_style: i64,
-    pub padding: Padding,
-    pub padding_new_font: Padding,
+    pub padding: Option<Padding>,
+    pub padding_new_font: Option<Padding>,
     pub personal_card_show_style: i64,
-    pub profile_card_panel: ProfileCardPanel,
+    pub profile_card_panel: Option<ProfileCardPanel>,
     pub public_screen_show_style: i64,
     pub ranklist_online_audience_show_style: i64,
     pub str: String,
@@ -714,14 +714,14 @@ pub struct StreamUrl {
     pub complete_push_urls: Vec<Value>,
     pub default_resolution: String,
     pub extra: Extra,
-    pub flv_pull_url: FlvPullUrl,
+    pub flv_pull_url: Option<FlvPullUrl>,
     pub flv_pull_url_params: FlvPullUrl,
     pub hls_pull_url: String,
     pub hls_pull_url_map: AnchorAbmap,
     pub hls_pull_url_params: String,
     pub id: i64,
     pub id_str: String,
-    pub live_core_sdk_data: LiveCoreSdkData,
+    pub live_core_sdk_data: Option<LiveCoreSdkData>,
     pub provider: i64,
     pub push_resolution: String,
     pub push_urls: Vec<Value>,
@@ -760,11 +760,11 @@ pub struct Extra {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FlvPullUrl {
     #[serde(rename = "HD1")]
-    pub hd1: String,
+    pub hd1: Option<String>,
     #[serde(rename = "SD1")]
-    pub sd1: String,
+    pub sd1: Option<String>,
     #[serde(rename = "SD2")]
-    pub sd2: String,
+    pub sd2: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -798,19 +798,19 @@ pub struct DefaultQuality {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ResolutionName {
     #[serde(rename = "AUTO")]
-    pub auto: String,
+    pub auto: Option<String>,
     #[serde(rename = "FULL_HD1")]
-    pub full_hd1: String,
+    pub full_hd1: Option<String>,
     #[serde(rename = "HD1")]
-    pub hd1: String,
+    pub hd1: Option<String>,
     #[serde(rename = "ORIGION")]
-    pub origion: String,
+    pub origion: Option<String>,
     #[serde(rename = "SD1")]
-    pub sd1: String,
+    pub sd1: Option<String>,
     #[serde(rename = "SD2")]
-    pub sd2: String,
-    pub pm_mt_video_1080p60: String,
-    pub pm_mt_video_720p60: String,
+    pub sd2: Option<String>,
+    pub pm_mt_video_1080p60: Option<String>,
+    pub pm_mt_video_720p60: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

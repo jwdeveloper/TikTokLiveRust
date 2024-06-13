@@ -73,8 +73,7 @@ use tokio::signal; // Importing signal handling from tokio
 #[tokio::main] // Main function is asynchronous and uses tokio runtime
 async fn main() {
     init_logger("info"); // Initialize logger with "info" level
-
-    let user_name = "tragdate"; // Define the TikTok username
+    let user_name = "tragdate";
 
     let client = create_client(user_name); // Create a client for the given username
 
@@ -96,6 +95,10 @@ async fn main() {
                         error!("Error connecting to TikTok Live after retry: {}", e);
                     }
                 }
+                LibError::HeaderNotReceived => {
+                    error!("Error connecting to TikTok Live: {}", e);
+                }
+
                 _ => {
                     // General error case
                     error!("Error connecting to TikTok Live: {}", e);
@@ -112,17 +115,18 @@ async fn main() {
 fn handle_event(client: &TikTokLiveClient, event: &TikTokLiveEvent) {
     match event {
         TikTokLiveEvent::OnConnected(..) => {
-            // This is an experimental and unstable feature
+            // This is an EXPERIMENTAL and UNSTABLE feature
             // Get room info from the client
             let room_info = client.get_room_info();
-            // Parse the room info
+            // // Parse the room info
             let client_data: ClientData = serde_json::from_str(room_info).unwrap();
-            // Parse the stream data
+            // // Parse the stream data
             let stream_data: StreamData = serde_json::from_str(
                 &client_data
                     .data
                     .stream_url
                     .live_core_sdk_data
+                    .unwrap()
                     .pull_data
                     .stream_data,
             )
