@@ -30,6 +30,7 @@ protobuf = { version = "3.4.0", features = ["bytes"] }
 
 url = "2.5.0"
 tungstenite = "0.16.0"
+futures-util = "0.3.30"
 
 [build-dependencies]
 protobuf-codegen = "3.4.0"
