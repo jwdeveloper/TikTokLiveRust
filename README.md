@@ -6,7 +6,7 @@
 <div align="center" >
 <h1>TikTok Live Rust</h1>
 
-❤️❤️🎁 *Connect to TikTok live in 3 lines* 🎁❤️❤️
+❤️❤️🎁 _Connect to TikTok live in 3 lines_ 🎁❤️❤️
 
 <div align="center" >
 
@@ -22,20 +22,22 @@
 </div>
 
 # Introduction
+
 A Rust library. Use it to receive live stream events such as comments and gifts in realtime from [TikTok LIVE](https://www.tiktok.com/live) No credentials are required.
 
 Join the support [discord](https://discord.gg/e2XwPNTBBr) and visit the `#rust-support` channel for questions, contributions and ideas. Feel free to make pull requests with missing/new features, fixes, etc
 
 Do you prefer other programming languages?
-- **Java**   [TikTokLiveJava](https://github.com/jwdeveloper/TikTokLiveJava)
-- **Node**   [TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector) by [@zerodytrash](https://github.com/zerodytrash)
+
+- **Java** [TikTokLiveJava](https://github.com/jwdeveloper/TikTokLiveJava)
+- **Node** [TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector) by [@zerodytrash](https://github.com/zerodytrash)
 - **Python** [TikTokLive](https://github.com/isaackogan/TikTokLive) by [@isaackogan](https://github.com/isaackogan)
-- **C#**     [TikTokLiveSharp](https://github.com/frankvHoof93/TikTokLiveSharp) by [@frankvHoof93](https://github.com/frankvHoof93)
+- **C#** [TikTokLiveSharp](https://github.com/frankvHoof93/TikTokLiveSharp) by [@frankvHoof93](https://github.com/frankvHoof93)
 
 **NOTE:** This is not an official API. It's a reverse engineering project.
 
-
 #### Overview
+
 - [Getting started](#getting-started)
 - [Documentation](https://docs.rs/tiktoklive/latest/tiktoklive/)
 - [Contributing](#contributing)
@@ -46,7 +48,7 @@ Do you prefer other programming languages?
 
 ```toml
 [dependencies]
-tiktoklive = "0.0.15"
+tiktoklive = "0.0.16"
 tokio = { version = "1.35.1", features = ["full"] }
 serde_json = "1.0"
 log = "0.4"
@@ -214,9 +216,9 @@ fn create_client_with_cookies(user_name: &str) -> TikTokLiveClient {
 }
 ```
 
-## Library errors table 
+## Library errors table
 
-You can catch errors on events with 
+You can catch errors on events with
 
 ```rust
 use tiktoklive::LibError;
@@ -233,38 +235,40 @@ if let Err(e) = client.connect().await {
 }
 ```
 
-| Error type | Description |
-| --- | --- |
-| RoomIDFieldMissing | Room ID field is missing, contact developer |
-| UserFieldMissing | User field is missing |
-| UserDataFieldMissing | User data field is missing |
-| LiveDataFieldMissing | Live data field is missing |
-| JsonParseError | Error parsing JSON |
-| UserMessageFieldMissing | User message field is missing |
-| ParamsError | Params error |
-| UserStatusFieldMissing | User status field is missing |
-| LiveStatusFieldMissing | Live status field is missing |
-| TitleFieldMissing | Title field is missing |
-| UserCountFieldMissing | User count field is missing |
-| StatsFieldMissing | Stats field is missing |
-| LikeCountFieldMissing | Like count is missing |
-| TotalUserFieldMissing | Total user field is missing |
-| LiveRoomFieldMissing | Live room field is missing |
-| StartTimeFieldMissing | Start time field is missing |
-| UserNotFound | User not found |
-| HostNotOnline | Live stream for host is not online!, current status HostOffline |
-| InvalidHost | Invalid host in WebSocket URL |
-| WebSocketConnectFailed | Failed to connect to WebSocket |
-| PushFrameParseError | Unable to read push frame |
-| WebcastResponseParseError | Unable to read webcast response |
-| AckPacketSendError | Unable to send ack packet |
-| HttpRequestFailed | HTTP request failed |
-| UrlSigningFailed | URL signing failed |
-| HeaderNotReceived | Header was not received |
-| BytesParseError | Unable to parse bytes to Push Frame |
+| Error type                | Description                                                     |
+| ------------------------- | --------------------------------------------------------------- |
+| RoomIDFieldMissing        | Room ID field is missing, contact developer                     |
+| UserFieldMissing          | User field is missing                                           |
+| UserDataFieldMissing      | User data field is missing                                      |
+| LiveDataFieldMissing      | Live data field is missing                                      |
+| JsonParseError            | Error parsing JSON                                              |
+| UserMessageFieldMissing   | User message field is missing                                   |
+| ParamsError               | Params error                                                    |
+| UserStatusFieldMissing    | User status field is missing                                    |
+| LiveStatusFieldMissing    | Live status field is missing                                    |
+| TitleFieldMissing         | Title field is missing                                          |
+| UserCountFieldMissing     | User count field is missing                                     |
+| StatsFieldMissing         | Stats field is missing                                          |
+| LikeCountFieldMissing     | Like count is missing                                           |
+| TotalUserFieldMissing     | Total user field is missing                                     |
+| LiveRoomFieldMissing      | Live room field is missing                                      |
+| StartTimeFieldMissing     | Start time field is missing                                     |
+| UserNotFound              | User not found                                                  |
+| HostNotOnline             | Live stream for host is not online!, current status HostOffline |
+| InvalidHost               | Invalid host in WebSocket URL                                   |
+| WebSocketConnectFailed    | Failed to connect to WebSocket                                  |
+| PushFrameParseError       | Unable to read push frame                                       |
+| WebcastResponseParseError | Unable to read webcast response                                 |
+| AckPacketSendError        | Unable to send ack packet                                       |
+| HttpRequestFailed         | HTTP request failed                                             |
+| UrlSigningFailed          | URL signing failed                                              |
+| HeaderNotReceived         | Header was not received                                         |
+| BytesParseError           | Unable to parse bytes to Push Frame                             |
 
 ## Contributing
+
 Your improvements are welcome! Feel free to open an <a href="https://github.com/jwdeveloper/TikTok-Live-Java/issues">issue</a> or <a href="https://github.com/jwdeveloper/TikTok-Live-Java/pulls">pull request</a>.
 
 ## Contributors
+
 [Zmole Cristian](https://github.com/ZmoleCristian)
