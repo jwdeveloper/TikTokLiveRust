@@ -48,7 +48,7 @@ Do you prefer other programming languages?
 
 ```toml
 [dependencies]
-tiktoklive = "0.0.16"
+tiktoklive = "0.0.18"
 tokio = { version = "1.35.1", features = ["full"] }
 serde_json = "1.0"
 log = "0.4"
