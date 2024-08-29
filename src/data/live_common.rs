@@ -974,6 +974,7 @@ pub struct Demotion {
 pub struct TikTokLiveSettings {
     pub host_name: String,
     pub language: String,
+    pub sign_api_key: String,
     pub reconnect_on_fail: bool,
     pub print_logs: bool,
     pub http_data: HttpData,

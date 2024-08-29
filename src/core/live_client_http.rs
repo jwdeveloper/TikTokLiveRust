@@ -77,6 +77,7 @@ impl TikTokLiveHttpClient {
             .with_param("client", "ttlive-rust")
             .with_param("uuc", "1")
             .with_param("url", url_to_sign.as_str())
+            .with_param("apiKey", self.settings.sign_api_key.as_str())
             .as_json()
             .await;
 

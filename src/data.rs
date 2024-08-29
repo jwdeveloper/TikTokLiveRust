@@ -8,6 +8,7 @@ pub mod live_common;
 pub fn create_default_settings(host_name: &str) -> TikTokLiveSettings {
     TikTokLiveSettings {
         language: "en-US".to_string(),
+        sign_api_key: "".to_string(),
         print_logs: true,
         reconnect_on_fail: true,
         host_name: host_name.to_string(),
