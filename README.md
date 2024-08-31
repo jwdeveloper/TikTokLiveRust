@@ -44,6 +44,10 @@ Do you prefer other programming languages?
 
 ## Getting started
 
+### Signing server API key
+
+If you don't have a signing server you can obtain a free API key from [EulerStream](https://www.eulerstream.com/) 
+
 ### Dependencies
 
 ```toml
@@ -192,6 +196,7 @@ fn configure(settings: &mut TikTokLiveSettings) {
 // Function to configure the TikTok live settings with cookies for authentication
 fn configure_with_cookies(settings: &mut TikTokLiveSettings) {
     settings.http_data.time_out = Duration::from_secs(12); // Set HTTP timeout to 12 seconds
+    settings.sign_api_key = "".to_string(); // Provide your own api key here
     let contents = ""; // Placeholder for cookies
     settings
         .http_data
