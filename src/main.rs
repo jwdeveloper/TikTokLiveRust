@@ -126,11 +126,13 @@ fn init_logger(default_level: &str) {
 // Function to configure the TikTok live settings
 fn configure(settings: &mut TikTokLiveSettings) {
     settings.http_data.time_out = Duration::from_secs(12); // Set HTTP timeout to 12 seconds
+    settings.sign_api_key = "".to_string(); // Provide your own api key here
 }
 
 // Function to configure the TikTok live settings with cookies for authentication
 fn configure_with_cookies(settings: &mut TikTokLiveSettings) {
     settings.http_data.time_out = Duration::from_secs(12); // Set HTTP timeout to 12 seconds
+    settings.sign_api_key = "".to_string(); // Provide your own api key here
     let contents = ""; // Placeholder for cookies
     settings
         .http_data
