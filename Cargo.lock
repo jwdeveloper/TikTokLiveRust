@@ -1155,7 +1155,7 @@ dependencies = [
 
 [[package]]
 name = "tiktoklive"
-version = "0.0.17"
+version = "0.0.18"
 dependencies = [
  "bytes",
  "env_logger",
