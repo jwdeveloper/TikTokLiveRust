@@ -52,7 +52,7 @@ If you don't have a signing server you can obtain a free API key from [EulerStre
 
 ```toml
 [dependencies]
-tiktoklive = "0.0.18"
+tiktoklive = "0.0.19"
 tokio = { version = "1.35.1", features = ["full"] }
 serde_json = "1.0"
 log = "0.4"
